@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { CharacterSheet } from "../character/CharacterSheet";
 import { useState } from "react";
+import { Link } from "wouter";
 
 export function GMDashboard({ roomId }: { roomId: number }) {
   const { characters } = useGame();
@@ -58,7 +59,11 @@ export function GMDashboard({ roomId }: { roomId: number }) {
         <TableBody>
           {characters.map((character) => (
             <TableRow key={character.id}>
-              <TableCell>{character.name}</TableCell>
+              <TableCell>
+                <Link href={`/rooms/${roomId}/characters/${character.id}`} className="text-primary hover:underline">
+                  {character.name}
+                </Link>
+              </TableCell>
               <TableCell>{character.class}</TableCell>
               <TableCell>{character.level}</TableCell>
               <TableCell>
