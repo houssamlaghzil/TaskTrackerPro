@@ -20,10 +20,7 @@ export default function HomePage() {
         {user?.isGameMaster && (
           <Button
             onClick={() =>
-              createRoom({
-                name: `${user.username}'s Game`,
-                gameMasterId: user.id,
-              })
+              createRoom(`${user.username}'s Game`)
             }
           >
             <Plus className="w-4 h-4 mr-2" />

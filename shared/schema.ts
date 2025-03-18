@@ -9,9 +9,16 @@ export const users = pgTable("users", {
   isGameMaster: boolean("is_game_master").default(false).notNull(),
 });
 
+export const gameRooms = pgTable("game_rooms", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  gameMasterId: integer("game_master_id").references(() => users.id).notNull(),
+});
+
 export const characters = pgTable("characters", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
+  roomId: integer("room_id").references(() => gameRooms.id).notNull(),
   name: text("name").notNull(),
   race: text("race").notNull(),
   class: text("class").notNull(),
@@ -28,12 +35,6 @@ export const characters = pgTable("characters", {
   maxHitPoints: integer("max_hit_points").notNull(),
 });
 
-export const gameRooms = pgTable("game_rooms", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  gameMasterId: integer("game_master_id").references(() => users.id).notNull(),
-});
-
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -42,10 +43,12 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertCharacterSchema = createInsertSchema(characters).omit({
   id: true,
   userId: true,
+  roomId: true,
 });
 
 export const insertGameRoomSchema = createInsertSchema(gameRooms).omit({
   id: true,
+  gameMasterId: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

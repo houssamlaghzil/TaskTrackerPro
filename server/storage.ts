@@ -3,7 +3,7 @@ import connectPg from "connect-pg-simple";
 import session from "express-session";
 import { db } from "./db";
 import { users, characters, gameRooms } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import type { User, InsertUser, Character, GameRoom } from "@shared/schema";
 
 const PostgresSessionStore = connectPg(session);
@@ -53,11 +53,23 @@ export class DatabaseStorage implements IStorage {
     return newCharacter;
   }
 
-  async getCharactersByUserId(userId: number): Promise<Character[]> {
+  async getCharactersByRoomId(roomId: number): Promise<Character[]> {
     return await db
       .select()
       .from(characters)
-      .where(eq(characters.userId, userId));
+      .where(eq(characters.roomId, roomId));
+  }
+
+  async getCharactersByUserAndRoom(userId: number, roomId: number): Promise<Character[]> {
+    return await db
+      .select()
+      .from(characters)
+      .where(
+        and(
+          eq(characters.userId, userId),
+          eq(characters.roomId, roomId)
+        )
+      );
   }
 
   async createGameRoom(room: Omit<GameRoom, "id">): Promise<GameRoom> {
@@ -70,6 +82,14 @@ export class DatabaseStorage implements IStorage {
 
   async getGameRooms(): Promise<GameRoom[]> {
     return await db.select().from(gameRooms);
+  }
+
+  async getGameRoom(id: number): Promise<GameRoom | undefined> {
+    const [room] = await db
+      .select()
+      .from(gameRooms)
+      .where(eq(gameRooms.id, id));
+    return room;
   }
 }
 
