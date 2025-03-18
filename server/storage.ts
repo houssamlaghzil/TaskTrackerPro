@@ -1,67 +1,76 @@
 import { IStorage } from "./types";
-import type { User, InsertUser, Character, GameRoom } from "@shared/schema";
-import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
 import session from "express-session";
+import { db } from "./db";
+import { users, characters, gameRooms } from "@shared/schema";
+import { eq } from "drizzle-orm";
+import type { User, InsertUser, Character, GameRoom } from "@shared/schema";
 
-const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private characters: Map<number, Character>;
-  private gameRooms: Map<number, GameRoom>;
+export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
-  currentId: number;
 
   constructor() {
-    this.users = new Map();
-    this.characters = new Map();
-    this.gameRooms = new Map();
-    this.currentId = 1;
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+    if (!process.env.DATABASE_URL) {
+      throw new Error("DATABASE_URL must be set");
+    }
+
+    this.sessionStore = new PostgresSessionStore({
+      conObject: {
+        connectionString: process.env.DATABASE_URL,
+      },
+      createTableIfMissing: true,
     });
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const user: User = { ...insertUser, id, isGameMaster: false };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async createCharacter(character: Omit<Character, "id">): Promise<Character> {
-    const id = this.currentId++;
-    const newCharacter = { ...character, id };
-    this.characters.set(id, newCharacter);
+    const [newCharacter] = await db
+      .insert(characters)
+      .values(character)
+      .returning();
     return newCharacter;
   }
 
   async getCharactersByUserId(userId: number): Promise<Character[]> {
-    return Array.from(this.characters.values()).filter(
-      (char) => char.userId === userId,
-    );
+    return await db
+      .select()
+      .from(characters)
+      .where(eq(characters.userId, userId));
   }
 
   async createGameRoom(room: Omit<GameRoom, "id">): Promise<GameRoom> {
-    const id = this.currentId++;
-    const newRoom = { ...room, id };
-    this.gameRooms.set(id, newRoom);
+    const [newRoom] = await db
+      .insert(gameRooms)
+      .values(room)
+      .returning();
     return newRoom;
   }
 
   async getGameRooms(): Promise<GameRoom[]> {
-    return Array.from(this.gameRooms.values());
+    return await db.select().from(gameRooms);
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
