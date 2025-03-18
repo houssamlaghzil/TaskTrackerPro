@@ -13,11 +13,25 @@ export default function CharacterPage() {
   const { data: room, isLoading: isLoadingRoom } = useQuery<GameRoom>({
     queryKey: ["/api/rooms", params?.roomId],
     enabled: !!params?.roomId,
+    queryFn: async () => {
+      const res = await fetch(`/api/rooms/${params?.roomId}`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to fetch room");
+      return res.json();
+    },
   });
 
   const { data: characters = [], isLoading: isLoadingCharacters } = useQuery<Character[]>({
     queryKey: ["/api/rooms", params?.roomId, "characters"],
     enabled: !!params?.roomId,
+    queryFn: async () => {
+      const res = await fetch(`/api/rooms/${params?.roomId}/characters`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to fetch characters");
+      return res.json();
+    },
   });
 
   if (isLoadingRoom || isLoadingCharacters) {
