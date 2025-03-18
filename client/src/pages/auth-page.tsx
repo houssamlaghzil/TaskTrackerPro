@@ -12,18 +12,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect } from "react";
 
 export default function AuthPage() {
   const { loginMutation, registerMutation, user } = useAuth();
   const [, setLocation] = useLocation();
 
-  if (user) {
-    setLocation("/");
-    return null;
-  }
+  useEffect(() => {
+    if (user) {
+      setLocation("/");
+    }
+  }, [user, setLocation]);
 
   const loginForm = useForm<InsertUser>({
     resolver: zodResolver(insertUserSchema),
