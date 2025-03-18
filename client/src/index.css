@@ -8,6 +8,53 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-gradient-to-br from-background to-background/95 text-foreground min-h-screen;
+  }
+}
+
+@layer components {
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:bg-accent/50;
+  }
+
+  .btn-hover {
+    @apply transition-all duration-200 hover:scale-105 active:scale-95;
+  }
+
+  .dice-button {
+    @apply relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] active:translate-y-[1px];
+  }
+
+  .dice-button::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .dice-button:hover::after {
+    @apply opacity-100;
+  }
+
+  .character-stat {
+    @apply relative transition-all duration-300;
+  }
+
+  .character-stat:hover {
+    @apply scale-110 z-10 shadow-xl bg-card;
+  }
+
+  .inventory-item {
+    @apply transition-all duration-200;
+  }
+
+  .inventory-item:hover {
+    @apply -translate-y-1 shadow-md;
+  }
+
+  .page-transition {
+    @apply animate-in fade-in slide-in-from-bottom-4 duration-500;
+  }
+
+  .dialog-content {
+    @apply animate-in zoom-in-95 duration-300;
   }
 }

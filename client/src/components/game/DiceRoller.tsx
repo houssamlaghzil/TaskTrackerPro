@@ -8,15 +8,15 @@ export function DiceRoller() {
   const { rollDice } = useGame();
 
   return (
-    <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card">
-      <h3 className="text-lg font-bold">Dice Roller</h3>
+    <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card/50 backdrop-blur">
+      <h3 className="text-lg font-bold text-primary">Dice Roller</h3>
       <div className="grid grid-cols-3 gap-2">
         {DICE_TYPES.map((type) => (
           <Button
             key={type}
             variant="outline"
             onClick={() => rollDice(type)}
-            className="flex items-center gap-2"
+            className="dice-button flex items-center gap-2"
           >
             <Dice6 className="w-4 h-4" />
             d{type}
