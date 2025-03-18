@@ -1,0 +1,75 @@
+client:536 WebSocket connection to 'wss://a6427a88-ee99-40de-a5d1-67bbc7689b67-00-19wicdfr1bnvg.picard.replit.dev/?token=oV9vPipdANxd' failed: 
+setupWebSocket @ client:536
+(anonyme) @ client:531Comprendre cette erreurAI
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=oV9vPipdANxd' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonyme) @ client:555Comprendre cette erreurAI
+chunk-RPCDYKBN.js?v=4e63d283:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+queryClient.ts:32 
+            
+            
+           GET https://a6427a88-ee99-40de-a5d1-67bbc7689b67-00-19wicdfr1bnvg.picard.replit.dev/api/user 401 (Unauthorized)
+(anonyme) @ queryClient.ts:32
+fetchFn @ @tanstack_react-query.js?v=4e63d283:840
+run @ @tanstack_react-query.js?v=4e63d283:494
+start @ @tanstack_react-query.js?v=4e63d283:536
+fetch @ @tanstack_react-query.js?v=4e63d283:926
+executeFetch_fn @ @tanstack_react-query.js?v=4e63d283:2211
+onSubscribe @ @tanstack_react-query.js?v=4e63d283:1898
+subscribe @ @tanstack_react-query.js?v=4e63d283:24
+(anonyme) @ @tanstack_react-query.js?v=4e63d283:3022
+subscribeToStore @ chunk-RPCDYKBN.js?v=4e63d283:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=4e63d283:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=4e63d283:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=4e63d283:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=4e63d283:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=4e63d283:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=4e63d283:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=4e63d283:19447
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=4e63d283:18868
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=4e63d283:9119
+commitRootImpl @ chunk-RPCDYKBN.js?v=4e63d283:19432
+commitRoot @ chunk-RPCDYKBN.js?v=4e63d283:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=4e63d283:18805
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=4e63d283:18718
+workLoop @ chunk-RPCDYKBN.js?v=4e63d283:197
+flushWork @ chunk-RPCDYKBN.js?v=4e63d283:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=4e63d283:384Comprendre cette erreurAI
+queryClient.ts:32 
+            
+            
+           GET https://a6427a88-ee99-40de-a5d1-67bbc7689b67-00-19wicdfr1bnvg.picard.replit.dev/api/rooms 401 (Unauthorized)
+(anonyme) @ queryClient.ts:32
+fetchFn @ @tanstack_react-query.js?v=4e63d283:840
+run @ @tanstack_react-query.js?v=4e63d283:494
+start @ @tanstack_react-query.js?v=4e63d283:536
+fetch @ @tanstack_react-query.js?v=4e63d283:926
+executeFetch_fn @ @tanstack_react-query.js?v=4e63d283:2211
+onSubscribe @ @tanstack_react-query.js?v=4e63d283:1898
+subscribe @ @tanstack_react-query.js?v=4e63d283:24
+(anonyme) @ @tanstack_react-query.js?v=4e63d283:3022
+subscribeToStore @ chunk-RPCDYKBN.js?v=4e63d283:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=4e63d283:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=4e63d283:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=4e63d283:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=4e63d283:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=4e63d283:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=4e63d283:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=4e63d283:19447
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=4e63d283:18868
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=4e63d283:9119
+commitRootImpl @ chunk-RPCDYKBN.js?v=4e63d283:19432
+commitRoot @ chunk-RPCDYKBN.js?v=4e63d283:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=4e63d283:18805
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=4e63d283:18718
+workLoop @ chunk-RPCDYKBN.js?v=4e63d283:197
+flushWork @ chunk-RPCDYKBN.js?v=4e63d283:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=4e63d283:384Comprendre cette erreurAI
+queryClient.ts:32 
+            
+            
+           GET https://a6427a88-ee99-40de-a5d1-67bbc7689b67-00-19wicdfr1bnvg.picard.replit.dev/api/characters 401 (Unauthorized)

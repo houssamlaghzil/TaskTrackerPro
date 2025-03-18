@@ -54,19 +54,3 @@ export type Character = typeof characters.$inferSelect;
 export type GameRoom = typeof gameRooms.$inferSelect;
 export type InsertCharacter = z.infer<typeof insertCharacterSchema>;
 export type InsertGameRoom = z.infer<typeof insertGameRoomSchema>;
-
-// Websocket message types
-export type DiceRoll = {
-  type: "roll";
-  diceType: number;
-  result: number;
-  userId: number;
-  username: string;
-};
-
-export type GameStateUpdate = {
-  type: "state_update";
-  characters: Character[];
-};
-
-export type WebSocketMessage = DiceRoll | GameStateUpdate;

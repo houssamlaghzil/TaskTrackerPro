@@ -1,7 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import type { Character, GameRoom, WebSocketMessage } from "@shared/schema";
-import { useWebSocket } from "@/lib/useWebSocket";
+import type { Character, GameRoom } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -21,12 +20,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const [currentRoom, setCurrentRoom] = useState<GameRoom | null>(null);
 
+  // Polling toutes les 3 secondes pour les mises à jour
   const { data: characters = [] } = useQuery<Character[]>({
     queryKey: ["/api/characters"],
+    refetchInterval: 3000,
   });
 
   const { data: rooms = [] } = useQuery<GameRoom[]>({
     queryKey: ["/api/rooms"],
+    refetchInterval: 3000,
   });
 
   const createCharacterMutation = useMutation({
@@ -57,18 +59,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  const { sendMessage } = useWebSocket((message: WebSocketMessage) => {
-    switch (message.type) {
-      case "roll":
-        toast({
-          title: "Dice Roll",
-          description: `${message.username} rolled a ${message.result} (d${message.diceType})`,
-        });
-        break;
-      case "state_update":
-        queryClient.invalidateQueries({ queryKey: ["/api/characters"] });
-        break;
-    }
+  const rollDiceMutation = useMutation({
+    mutationFn: async (diceType: number) => {
+      const res = await apiRequest("POST", "/api/roll", { diceType });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Dice Roll",
+        description: `You rolled a ${data.result}`,
+      });
+    },
   });
 
   return (
@@ -78,16 +79,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
         rooms,
         currentRoom,
         joinRoom: setCurrentRoom,
-        rollDice: (diceType) => {
+        rollDice: (diceType: number) => {
           if (!currentRoom) return;
-          const result = Math.floor(Math.random() * diceType) + 1;
-          sendMessage({
-            type: "roll",
-            diceType,
-            result,
-            userId: currentRoom.id,
-            username: "Player", // TODO: Get from auth context
-          });
+          rollDiceMutation.mutate(diceType);
         },
         createCharacter: createCharacterMutation.mutate,
         createRoom: createRoomMutation.mutate,
