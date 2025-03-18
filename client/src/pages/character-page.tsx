@@ -4,17 +4,18 @@ import { useRoute } from "wouter";
 import { CharacterSheet } from "@/components/character/CharacterSheet";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import type { Character, GameRoom } from "@shared/schema";
 
 export default function CharacterPage() {
   const [, params] = useRoute<{ roomId: string; characterId: string }>("/rooms/:roomId/characters/:characterId");
   const { user } = useAuth();
 
-  const { data: room, isLoading: isLoadingRoom } = useQuery({
+  const { data: room, isLoading: isLoadingRoom } = useQuery<GameRoom>({
     queryKey: ["/api/rooms", params?.roomId],
     enabled: !!params?.roomId,
   });
 
-  const { data: characters = [], isLoading: isLoadingCharacters } = useQuery({
+  const { data: characters = [], isLoading: isLoadingCharacters } = useQuery<Character[]>({
     queryKey: ["/api/rooms", params?.roomId, "characters"],
     enabled: !!params?.roomId,
   });
