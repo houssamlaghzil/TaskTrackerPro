@@ -16,15 +16,16 @@ export default function HomePage() {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Available Game Rooms</h1>
+        <h1 className="text-2xl font-bold">Salles de Jeu Disponibles</h1>
         {user?.isGameMaster && (
           <Button
             onClick={() =>
-              createRoom(`${user.username}'s Game`)
+              createRoom(`Partie de ${user.username}`)
             }
+            className="btn-hover"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Create Room
+            Créer une Salle
           </Button>
         )}
       </div>
@@ -35,19 +36,19 @@ export default function HomePage() {
         </div>
       ) : rooms.length === 0 ? (
         <Card className="p-6 text-center text-muted-foreground">
-          No game rooms available. {user?.isGameMaster && "Create one to get started!"}
+          Aucune salle de jeu disponible. {user?.isGameMaster && "Créez-en une pour commencer !"}
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {rooms.map((room) => (
             <Card
               key={room.id}
-              className="p-4 cursor-pointer hover:bg-accent transition-colors"
+              className="p-4 cursor-pointer card-hover"
               onClick={() => joinRoom(room)}
             >
               <h3 className="font-bold">{room.name}</h3>
               {room.gameMasterId === user?.id && (
-                <span className="text-sm text-muted-foreground">(Game Master)</span>
+                <span className="text-sm text-muted-foreground">(Maître du Jeu)</span>
               )}
             </Card>
           ))}

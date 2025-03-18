@@ -29,17 +29,17 @@ export function GMDashboard({ roomId }: { roomId: number }) {
   return (
     <Card className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Game Master Dashboard</h2>
+        <h2 className="text-xl font-bold">Tableau de Bord du Maître du Jeu</h2>
         <Dialog>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="btn-hover">
               <Plus className="w-4 h-4 mr-2" />
-              Create Character
+              Créer un Personnage
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="max-w-4xl dialog-content">
             <DialogHeader>
-              <DialogTitle>Create New Character</DialogTitle>
+              <DialogTitle>Créer un Nouveau Personnage</DialogTitle>
             </DialogHeader>
             <CharacterSheet />
           </DialogContent>
@@ -49,16 +49,16 @@ export function GMDashboard({ roomId }: { roomId: number }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Character</TableHead>
-            <TableHead>Class</TableHead>
-            <TableHead>Level</TableHead>
-            <TableHead>HP</TableHead>
+            <TableHead>Personnage</TableHead>
+            <TableHead>Classe</TableHead>
+            <TableHead>Niveau</TableHead>
+            <TableHead>PV</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {characters.map((character) => (
-            <TableRow key={character.id}>
+            <TableRow key={character.id} className="hover:bg-accent/50 transition-colors">
               <TableCell>
                 <Link href={`/rooms/${roomId}/characters/${character.id}`} className="text-primary hover:underline">
                   {character.name}
@@ -75,15 +75,16 @@ export function GMDashboard({ roomId }: { roomId: number }) {
                     <Button
                       variant="ghost"
                       size="sm"
+                      className="btn-hover"
                       onClick={() => setSelectedCharacter(character)}
                     >
                       <Edit className="w-4 h-4 mr-2" />
-                      Edit
+                      Modifier
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-4xl">
+                  <DialogContent className="max-w-4xl dialog-content">
                     <DialogHeader>
-                      <DialogTitle>Edit Character</DialogTitle>
+                      <DialogTitle>Modifier le Personnage</DialogTitle>
                     </DialogHeader>
                     {selectedCharacter && (
                       <CharacterSheet character={selectedCharacter} />
