@@ -8,13 +8,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { CharacterSheet } from "../character/CharacterSheet";
 
 export function GMDashboard({ roomId }: { roomId: number }) {
   const { characters } = useGame();
 
   return (
     <Card className="p-4">
-      <h2 className="text-xl font-bold mb-4">Game Master Dashboard</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Game Master Dashboard</h2>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Create Character
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Create New Character</DialogTitle>
+            </DialogHeader>
+            <CharacterSheet />
+          </DialogContent>
+        </Dialog>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
