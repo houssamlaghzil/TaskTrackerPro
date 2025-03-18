@@ -20,6 +20,12 @@ import { Character, insertCharacterSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { useGame } from "@/hooks/use-game";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Trash2 } from "lucide-react";
+import { Inventory } from "./Inventory";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+
 
 const CLASSES = [
   "Barbarian",
@@ -55,7 +61,7 @@ type StatBlockProps = {
 
 function StatBlock({ label, value, onChange }: StatBlockProps) {
   const modifier = Math.floor((value - 10) / 2);
-  
+
   return (
     <div className="flex flex-col items-center p-4 border rounded-lg bg-card">
       <label className="text-sm font-medium mb-2">{label}</label>
@@ -80,7 +86,21 @@ type Props = {
 
 export function CharacterSheet({ character }: Props) {
   const { createCharacter } = useGame();
-  
+  const { toast } = useToast();
+
+  const deleteCharacterMutation = useMutation({
+    mutationFn: async (characterId: number) => {
+      await apiRequest("DELETE", `/api/characters/${characterId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/rooms"] });
+      toast({
+        title: "Character deleted",
+        description: "Your character has been deleted successfully",
+      });
+    },
+  });
+
   const form = useForm({
     resolver: zodResolver(insertCharacterSchema),
     defaultValues: character || {
@@ -107,7 +127,20 @@ export function CharacterSheet({ character }: Props) {
 
   return (
     <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Character Sheet</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Character Sheet</h2>
+        {character && (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => deleteCharacterMutation.mutate(character.id)}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete Character
+          </Button>
+        )}
+      </div>
+
       <ScrollArea className="h-[calc(100vh-200px)]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -317,6 +350,11 @@ export function CharacterSheet({ character }: Props) {
             )}
           </form>
         </Form>
+        {character && (
+          <div className="mt-8">
+            <Inventory characterId={character.id} />
+          </div>
+        )}
       </ScrollArea>
     </Card>
   );

@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertCharacterSchema, insertGameRoomSchema } from "@shared/schema";
+import { insertCharacterSchema, insertGameRoomSchema, insertItemSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
@@ -25,6 +25,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       roomId: roomId,
     });
     res.status(201).json(character);
+  });
+
+  app.delete("/api/characters/:id", async (req, res) => {
+    if (!req.user) return res.sendStatus(401);
+    await storage.deleteCharacter(parseInt(req.params.id));
+    res.sendStatus(200);
   });
 
   app.get("/api/rooms/:roomId/characters", async (req, res) => {
@@ -69,6 +75,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const room = await storage.getGameRoom(roomId);
     if (!room) return res.status(404).send("Room not found");
     res.json(room);
+  });
+
+  // Item routes
+  app.post("/api/characters/:characterId/items", async (req, res) => {
+    if (!req.user) return res.sendStatus(401);
+
+    const validatedData = insertItemSchema.parse(req.body);
+    const characterId = parseInt(req.params.characterId);
+
+    const item = await storage.createItem({
+      ...validatedData,
+      characterId,
+    });
+    res.status(201).json(item);
+  });
+
+  app.get("/api/characters/:characterId/items", async (req, res) => {
+    if (!req.user) return res.sendStatus(401);
+    const characterId = parseInt(req.params.characterId);
+    const items = await storage.getItemsByCharacterId(characterId);
+    res.json(items);
+  });
+
+  app.delete("/api/items/:id", async (req, res) => {
+    if (!req.user) return res.sendStatus(401);
+    await storage.deleteItem(parseInt(req.params.id));
+    res.sendStatus(200);
   });
 
   // Dice roll route

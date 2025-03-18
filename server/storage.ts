@@ -2,9 +2,9 @@ import { IStorage } from "./types";
 import connectPg from "connect-pg-simple";
 import session from "express-session";
 import { db } from "./db";
-import { users, characters, gameRooms } from "@shared/schema";
+import { users, characters, gameRooms, items } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
-import type { User, InsertUser, Character, GameRoom } from "@shared/schema";
+import type { User, InsertUser, Character, GameRoom, Item, InsertItem } from "@shared/schema";
 
 const PostgresSessionStore = connectPg(session);
 
@@ -53,6 +53,10 @@ export class DatabaseStorage implements IStorage {
     return newCharacter;
   }
 
+  async deleteCharacter(id: number): Promise<void> {
+    await db.delete(characters).where(eq(characters.id, id));
+  }
+
   async getCharactersByRoomId(roomId: number): Promise<Character[]> {
     return await db
       .select()
@@ -90,6 +94,25 @@ export class DatabaseStorage implements IStorage {
       .from(gameRooms)
       .where(eq(gameRooms.id, id));
     return room;
+  }
+
+  async createItem(item: Omit<Item, "id">): Promise<Item> {
+    const [newItem] = await db
+      .insert(items)
+      .values(item)
+      .returning();
+    return newItem;
+  }
+
+  async getItemsByCharacterId(characterId: number): Promise<Item[]> {
+    return await db
+      .select()
+      .from(items)
+      .where(eq(items.characterId, characterId));
+  }
+
+  async deleteItem(id: number): Promise<void> {
+    await db.delete(items).where(eq(items.id, id));
   }
 }
 

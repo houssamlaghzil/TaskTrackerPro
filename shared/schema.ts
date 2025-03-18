@@ -35,6 +35,13 @@ export const characters = pgTable("characters", {
   maxHitPoints: integer("max_hit_points").notNull(),
 });
 
+export const items = pgTable("items", {
+  id: serial("id").primaryKey(),
+  characterId: integer("character_id").references(() => characters.id).notNull(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -51,9 +58,16 @@ export const insertGameRoomSchema = createInsertSchema(gameRooms).omit({
   gameMasterId: true,
 });
 
+export const insertItemSchema = createInsertSchema(items).omit({
+  id: true,
+  characterId: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Character = typeof characters.$inferSelect;
 export type GameRoom = typeof gameRooms.$inferSelect;
+export type Item = typeof items.$inferSelect;
 export type InsertCharacter = z.infer<typeof insertCharacterSchema>;
 export type InsertGameRoom = z.infer<typeof insertGameRoomSchema>;
+export type InsertItem = z.infer<typeof insertItemSchema>;
