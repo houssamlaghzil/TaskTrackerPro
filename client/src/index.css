@@ -8,26 +8,26 @@
   }
 
   body {
-    @apply font-sans antialiased bg-gradient-to-br from-background to-background/95 text-foreground min-h-screen;
+    @apply font-sans antialiased bg-gradient-to-br from-slate-900 to-slate-800 text-foreground min-h-screen;
   }
 }
 
 @layer components {
   .card-hover {
-    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:bg-accent/50;
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:bg-accent/50;
   }
 
   .btn-hover {
-    @apply transition-all duration-200 hover:scale-105 active:scale-95;
+    @apply transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-[0_0_10px_rgba(59,130,246,0.3)];
   }
 
   .dice-button {
-    @apply relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] active:translate-y-[1px];
+    @apply relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:translate-y-[-2px] active:translate-y-[1px] bg-gradient-to-r from-slate-800 to-slate-700;
   }
 
   .dice-button::after {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 transition-opacity duration-300;
+    @apply absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent opacity-0 transition-opacity duration-300;
   }
 
   .dice-button:hover::after {
@@ -35,19 +35,35 @@
   }
 
   .character-stat {
-    @apply relative transition-all duration-300;
+    @apply relative transition-all duration-300 backdrop-blur-sm;
   }
 
   .character-stat:hover {
-    @apply scale-110 z-10 shadow-xl bg-card;
+    @apply scale-110 z-10 shadow-[0_0_20px_rgba(59,130,246,0.3)] bg-slate-800/80;
+  }
+
+  .hp-text {
+    @apply text-red-500;
+  }
+
+  .mana-text {
+    @apply text-blue-500;
+  }
+
+  .stamina-text {
+    @apply text-green-500;
+  }
+
+  .stat-value {
+    @apply font-bold text-lg;
   }
 
   .inventory-item {
-    @apply transition-all duration-200;
+    @apply transition-all duration-200 bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-sm;
   }
 
   .inventory-item:hover {
-    @apply -translate-y-1 shadow-md;
+    @apply -translate-y-1 shadow-[0_0_15px_rgba(59,130,246,0.3)];
   }
 
   .page-transition {
@@ -55,6 +71,14 @@
   }
 
   .dialog-content {
-    @apply animate-in zoom-in-95 duration-300;
+    @apply animate-in zoom-in-95 duration-300 bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-lg;
+  }
+
+  .gaming-header {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-300 font-bold;
+  }
+
+  .stat-block {
+    @apply border border-slate-700 bg-slate-800/50 backdrop-blur-sm rounded-lg p-4 shadow-[0_0_10px_rgba(59,130,246,0.2)];
   }
 }

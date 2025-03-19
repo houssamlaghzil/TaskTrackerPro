@@ -63,17 +63,17 @@ function StatBlock({ label, value, onChange }: StatBlockProps) {
   const modifier = Math.floor((value - 10) / 2);
 
   return (
-    <div className="flex flex-col items-center p-4 border rounded-lg bg-card">
-      <label className="text-sm font-medium mb-2">{label}</label>
+    <div className="stat-block">
+      <label className="text-sm font-medium mb-2 gaming-header">{label}</label>
       <Input
         type="number"
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value) || 0)}
-        className="w-16 text-center mb-2"
+        className="w-16 text-center mb-2 bg-slate-700/50"
         min={1}
         max={20}
       />
-      <span className="text-sm text-muted-foreground">
+      <span className={`text-sm ${modifier >= 0 ? 'text-green-500' : 'text-red-500'}`}>
         {modifier >= 0 ? `+${modifier}` : modifier}
       </span>
     </div>
@@ -309,7 +309,7 @@ export function CharacterSheet({ character }: Props) {
                 name="hitPoints"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Current HP</FormLabel>
+                    <FormLabel className="hp-text">Points de Vie Actuels</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -317,6 +317,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
+                        className="bg-slate-700/50"
                       />
                     </FormControl>
                   </FormItem>
@@ -328,7 +329,7 @@ export function CharacterSheet({ character }: Props) {
                 name="maxHitPoints"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Max HP</FormLabel>
+                    <FormLabel className="hp-text">Points de Vie Maximum</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -336,6 +337,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
+                        className="bg-slate-700/50"
                       />
                     </FormControl>
                   </FormItem>
