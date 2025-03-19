@@ -33,6 +33,18 @@ export const characters = pgTable("characters", {
   }>(),
   hitPoints: integer("hit_points").notNull(),
   maxHitPoints: integer("max_hit_points").notNull(),
+  // Nouveaux champs
+  mana: integer("mana").default(0),
+  maxMana: integer("max_mana").default(0),
+  stamina: integer("stamina").default(0),
+  maxStamina: integer("max_stamina").default(0),
+  ultimateAttack: jsonb("ultimate_attack").$type<{
+    name: string;
+    description: string;
+    damage: string;
+    cooldown: string;
+    isAvailable: boolean;
+  }>(),
 });
 
 export const items = pgTable("items", {
@@ -51,6 +63,18 @@ export const insertCharacterSchema = createInsertSchema(characters).omit({
   id: true,
   userId: true,
   roomId: true,
+}).extend({
+  mana: z.number().optional(),
+  maxMana: z.number().optional(),
+  stamina: z.number().optional(),
+  maxStamina: z.number().optional(),
+  ultimateAttack: z.object({
+    name: z.string(),
+    description: z.string(),
+    damage: z.string(),
+    cooldown: z.string(),
+    isAvailable: z.boolean()
+  }).optional(),
 });
 
 export const insertGameRoomSchema = createInsertSchema(gameRooms).omit({

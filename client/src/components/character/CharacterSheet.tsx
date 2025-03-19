@@ -7,6 +7,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -25,7 +26,7 @@ import { Inventory } from "./Inventory";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-
+import { Checkbox } from "@/components/ui/checkbox";
 
 const CLASSES = [
   "Barbarian",
@@ -110,6 +111,10 @@ export function CharacterSheet({ character }: Props) {
       level: 1,
       hitPoints: 10,
       maxHitPoints: 10,
+      mana: 0,
+      maxMana: 0,
+      stamina: 100,
+      maxStamina: 100,
       stats: {
         strength: 10,
         dexterity: 10,
@@ -117,6 +122,13 @@ export function CharacterSheet({ character }: Props) {
         intelligence: 10,
         wisdom: 10,
         charisma: 10,
+      },
+      ultimateAttack: {
+        name: "",
+        description: "",
+        damage: "",
+        cooldown: "1 par repos long",
+        isAvailable: true,
       },
     },
   });
@@ -128,7 +140,7 @@ export function CharacterSheet({ character }: Props) {
   return (
     <Card className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Character Sheet</h2>
+        <h2 className="text-2xl font-bold gaming-header">Fiche de Personnage</h2>
         {character && (
           <Button
             variant="destructive"
@@ -343,11 +355,163 @@ export function CharacterSheet({ character }: Props) {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="mana"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="mana-text">Points de Mana Actuels</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                        className="bg-slate-700/50"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="maxMana"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="mana-text">Points de Mana Maximum</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                        className="bg-slate-700/50"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="stamina"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="stamina-text">Points d'Endurance Actuels</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                        className="bg-slate-700/50"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="maxStamina"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="stamina-text">Points d'Endurance Maximum</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                        className="bg-slate-700/50"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
+
+            <Card className="p-4 bg-slate-800/50 backdrop-blur-sm">
+              <h3 className="text-lg font-bold mb-4 gaming-header">Attaque Ultime</h3>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="ultimateAttack.name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom de l'Attaque</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-slate-700/50" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ultimateAttack.description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} className="bg-slate-700/50" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ultimateAttack.damage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dégâts</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-slate-700/50" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ultimateAttack.cooldown"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Temps de Recharge</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="bg-slate-700/50" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ultimateAttack.isAvailable"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                        <FormLabel>Disponible</FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Card>
 
             {!character && (
               <Button type="submit" className="w-full">
-                Create Character
+                Créer le Personnage
               </Button>
             )}
           </form>
