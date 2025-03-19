@@ -14,11 +14,37 @@
 
 @layer components {
   .card-hover {
-    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:bg-accent/50;
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+
+  .card-hover::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .card-hover:hover::after {
+    @apply opacity-100;
+  }
+
+  .card-hover:hover {
+    @apply transform scale-[1.02] shadow-[0_0_25px_rgba(59,130,246,0.4)] bg-accent/50;
   }
 
   .btn-hover {
-    @apply transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-[0_0_10px_rgba(59,130,246,0.3)];
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+
+  .btn-hover::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .btn-hover:hover::before {
+    @apply opacity-100;
+  }
+
+  .btn-hover:hover {
+    @apply transform scale-105 shadow-[0_0_20px_rgba(59,130,246,0.4)];
   }
 
   .dice-button {
@@ -80,5 +106,26 @@
 
   .stat-block {
     @apply border border-slate-700 bg-slate-800/50 backdrop-blur-sm rounded-lg p-4 shadow-[0_0_10px_rgba(59,130,246,0.2)];
+  }
+
+  .table-row-hover {
+    @apply transition-all duration-200;
+  }
+
+  .table-row-hover:hover {
+    @apply bg-slate-800/50 shadow-[0_0_15px_rgba(59,130,246,0.2)];
+  }
+
+  .link-hover {
+    @apply relative transition-all duration-200;
+  }
+
+  .link-hover::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+  }
+
+  .link-hover:hover::after {
+    @apply w-full;
   }
 }

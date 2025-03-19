@@ -58,9 +58,9 @@ export function GMDashboard({ roomId }: { roomId: number }) {
         </TableHeader>
         <TableBody>
           {characters.map((character) => (
-            <TableRow key={character.id} className="hover:bg-accent/50 transition-colors">
+            <TableRow key={character.id} className="table-row-hover">
               <TableCell>
-                <Link href={`/rooms/${roomId}/characters/${character.id}`} className="text-primary hover:underline">
+                <Link href={`/rooms/${roomId}/characters/${character.id}`} className="link-hover text-primary">
                   {character.name}
                 </Link>
               </TableCell>
