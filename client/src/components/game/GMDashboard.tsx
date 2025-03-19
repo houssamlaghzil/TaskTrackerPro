@@ -29,7 +29,7 @@ export function GMDashboard({ roomId }: { roomId: number }) {
   return (
     <Card className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Tableau de Bord du Maître du Jeu</h2>
+        <h2 className="text-xl font-bold gaming-header">Tableau de Bord du Maître du Jeu</h2>
         <Dialog>
           <DialogTrigger asChild>
             <Button className="btn-hover">

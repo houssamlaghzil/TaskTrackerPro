@@ -1,0 +1,57 @@
+Page de Login :
+
+Interface minimaliste avec un fond animé subtil (par exemple, paysage fantastique ou donjon animé légèrement en mouvement).
+
+Champs de saisie centrés, design élégant, bordures lumineuses avec effets lumineux interactifs au focus.
+
+Bouton de connexion dynamique avec effet visuel attrayant au clic (animation légère, effet sonore optionnel).
+
+Palette de couleurs claires, épurées, avec contrastes bleutés, verts ou violets rappelant un univers fantastique.
+
+Page d'accueil listant toutes les Rooms :
+
+Disposition en grille ou en cartes modernes, présentant chaque "room" sous forme de carte interactive.
+
+Chaque carte affiche clairement le nom de la room, le nombre de joueurs connectés, et un indicateur visuel de l'état (en attente, en cours, terminée).
+
+Effets de survol dynamiques avec des animations discrètes de mise en avant des cartes.
+
+Bouton clair pour "Créer une nouvelle room", placé de manière stratégique en haut ou en bas de l'écran, avec une animation invitant à l'action.
+
+Design général lumineux, clair, spacieux, avec des teintes douces et agréables à l'œil.
+
+Page Room (Liste des Personnages et Lancement de Dés) :
+
+Liste des personnages sous forme de cartes interactives présentant nom, classe, niveau et mini avatar personnalisable.
+
+Chaque carte personnage est cliquable pour accéder à l'édition complète.
+
+Interface intégrée, intuitive et visuellement engageante pour le lancer de dés avec animations réalistes ou stylisées selon un univers fantastique.
+
+Zone distincte réservée à l'affichage clair des résultats des dés, avec historique interactif accessible rapidement.
+
+Barre d'action rapide permettant facilement de basculer entre la liste des personnages, l'édition et le lancer de dés.
+
+Interface complète d'une Fiche de Personnage :
+
+Mise en page similaire à une "fiche personnage" typique de jeux vidéo RPG modernes.
+
+Affichage central des attributs principaux (Force, Dextérité, Constitution, etc.) avec indicateurs graphiques clairs (barres, jauges, icônes modernes).
+
+Gestion intuitive des ressources optionnelles telles que Mana et Endurance avec jauges interactives et animations subtiles lors des modifications.
+
+Section dédiée à l'inventaire avec des emplacements d'objets clairement illustrés, visuellement proche des inventaires vidéoludiques modernes.
+
+Zone réservée aux sorts, capacités spéciales, et attaque ultime clairement identifiée avec possibilité d'activation intuitive (bouton visuellement distinct).
+
+Onglets ou navigation simple pour accéder rapidement à l'historique du personnage, notes personnelles ou éléments supplémentaires de roleplay.
+
+Ambiance générale :
+
+Univers graphique épuré et lumineux, clair et immersif, rappelant les meilleurs éléments des interfaces vidéoludiques actuelles.
+
+Animations fluides, discrètes mais présentes pour enrichir l'expérience utilisateur sans distraire.
+
+Police moderne et lisible, accentuant la clarté et le confort visuel.
+
+Effets sonores optionnels subtils pour renforcer l'immersion lors des interactions clés.
