@@ -250,7 +250,7 @@ export function CharacterSheet({ character }: { character?: Character }) {
     };
   }, []);
 
-  // Ajout d'un useEffect pour gérer le ResizeObserver de manière plus sûre
+  // Fixing the ResizeObserver setup
   useEffect(() => {
     let resizeObserver: ResizeObserver | null = null;
     const target = cardRef.current;
@@ -258,11 +258,10 @@ export function CharacterSheet({ character }: { character?: Character }) {
     if (target) {
       try {
         resizeObserver = new ResizeObserver((entries) => {
-          // Utiliser requestAnimationFrame pour éviter les boucles infinies
-          requestAnimationFrame(() => {
-            if (!entries.length) return;
+          if (!entries.length) return;
 
-            // Mettre à jour les animations ou le style si nécessaire
+          // Use RAF to avoid infinite loops
+          window.requestAnimationFrame(() => {
             if (inView) {
               controls.start({
                 opacity: 1,
@@ -289,6 +288,11 @@ export function CharacterSheet({ character }: { character?: Character }) {
       }
     };
   }, [cardRef, controls, inView]);
+
+  // Fixing type mismatches in form fields
+  const fixNumberInput = (value: number | null): number => {
+    return value ?? 0;
+  };
 
   return (
     <motion.div
@@ -567,9 +571,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
                         <Input
                           type="number"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value) || 0)
-                          }
+                          value={fixNumberInput(field.value)}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                           className="input-fantasy"
                         />
                       </FormControl>
@@ -588,9 +591,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
                         <Input
                           type="number"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value) || 0)
-                          }
+                          value={fixNumberInput(field.value)}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                           className="input-fantasy"
                         />
                       </FormControl>
@@ -609,9 +611,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
                         <Input
                           type="number"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value) || 0)
-                          }
+                          value={fixNumberInput(field.value)}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                           className="input-fantasy"
                         />
                       </FormControl>
@@ -630,9 +631,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
                         <Input
                           type="number"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value) || 0)
-                          }
+                          value={fixNumberInput(field.value)}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                           className="input-fantasy"
                         />
                       </FormControl>
