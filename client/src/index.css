@@ -8,80 +8,61 @@
   }
 
   body {
-    @apply font-sans antialiased text-foreground min-h-screen overflow-x-hidden;
-    background: radial-gradient(circle at 50% 50%, rgba(17, 24, 39, 1), rgba(2, 6, 23, 1));
-    background-size: 200% 200%;
-    animation: gradientShift 15s ease infinite;
+    @apply font-sans antialiased text-foreground min-h-screen bg-white;
   }
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 @layer components {
   .card-hover {
-    @apply relative overflow-hidden transition-all duration-300;
-  }
-
-  .card-hover::after {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-300;
-  }
-
-  .card-hover:hover::after {
-    @apply opacity-100;
+    @apply relative overflow-hidden transition-all duration-300 bg-white border border-gray-100 rounded-xl shadow-sm;
   }
 
   .card-hover:hover {
-    @apply transform scale-[1.02] shadow-[0_0_25px_rgba(59,130,246,0.4)] bg-accent/50;
+    @apply transform scale-[1.02] shadow-lg;
+  }
+
+  .btn-hover {
+    @apply relative overflow-hidden transition-all duration-300 rounded-lg;
+  }
+
+  .btn-hover:hover {
+    @apply transform scale-105 shadow-md;
   }
 
   .dice-button {
-    @apply relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:translate-y-[-2px] active:translate-y-[1px] bg-gradient-to-r from-slate-800 to-slate-700;
-  }
-
-  .dice-button::after {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent opacity-0 transition-opacity duration-300;
-  }
-
-  .dice-button:hover::after {
-    @apply opacity-100;
+    @apply relative overflow-hidden transition-all duration-300 bg-white border border-gray-200 rounded-lg hover:shadow-md;
   }
 
   .character-stat {
-    @apply relative transition-all duration-300 backdrop-blur-sm rounded-lg border border-slate-700/50;
+    @apply relative transition-all duration-300 bg-white border border-gray-100 rounded-lg p-4;
   }
 
   .character-stat:hover {
-    @apply scale-110 z-10 shadow-[0_0_20px_rgba(59,130,246,0.3)] bg-slate-800/80;
+    @apply scale-105 z-10 shadow-lg;
   }
 
   .hp-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 font-semibold;
+    @apply text-red-600 font-semibold;
   }
 
   .mana-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-400 font-semibold;
+    @apply text-blue-600 font-semibold;
   }
 
   .stamina-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-400 font-semibold;
+    @apply text-green-600 font-semibold;
   }
 
   .stat-value {
-    @apply font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400;
+    @apply font-bold text-lg text-gray-900;
   }
 
   .inventory-item {
-    @apply transition-all duration-200 bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-sm rounded-lg border border-slate-700/50;
+    @apply transition-all duration-200 bg-white border border-gray-100 rounded-lg p-4;
   }
 
   .inventory-item:hover {
-    @apply -translate-y-1 shadow-[0_0_15px_rgba(59,130,246,0.3)] border-blue-500/50;
+    @apply -translate-y-1 shadow-md border-primary;
   }
 
   .page-transition {
@@ -89,62 +70,34 @@
   }
 
   .dialog-content {
-    @apply animate-in zoom-in-95 duration-300 bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-lg;
-  }
-  .input-fantasy {
-    @apply bg-slate-800/50 border-slate-700/50 focus:border-blue-500/50 focus:ring-blue-500/20 transition-all duration-300 backdrop-blur-sm;
-  }
-
-  .card-fantasy {
-    @apply bg-gradient-to-br from-slate-800/90 to-slate-700/90 backdrop-blur-sm border-slate-700/50 shadow-[0_0_15px_rgba(59,130,246,0.2)];
-  }
-
-  .table-row-hover {
-    @apply transition-all duration-300;
-  }
-
-  .table-row-hover:hover {
-    @apply bg-gradient-to-r from-slate-800/50 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.2)] backdrop-blur-sm;
-  }
-
-  .stat-block {
-    @apply border border-slate-700/50 bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-lg p-4 shadow-[0_0_10px_rgba(59,130,246,0.2)] hover:border-blue-500/30 transition-all duration-300;
-  }
-
-  .btn-hover {
-    @apply relative overflow-hidden transition-all duration-300;
-  }
-
-  .btn-hover::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 transition-opacity duration-300;
-  }
-
-  .btn-hover:hover::before {
-    @apply opacity-100;
-  }
-
-  .btn-hover:hover {
-    @apply transform scale-105 shadow-[0_0_20px_rgba(59,130,246,0.4)];
+    @apply animate-in zoom-in-95 duration-300 bg-white rounded-xl shadow-lg border border-gray-100;
   }
 
   .gaming-header {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-400 font-bold;
+    @apply font-bold text-gray-900;
   }
+
+  .stat-block {
+    @apply bg-white border border-gray-100 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300;
+  }
+
+  .table-row-hover {
+    @apply transition-all duration-200 bg-white hover:bg-gray-50;
+  }
+
   .link-hover {
-    @apply relative transition-all duration-200;
+    @apply relative transition-all duration-200 text-primary hover:text-primary-500;
   }
 
-  .link-hover::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-400 transition-all duration-300;
+  .input-fantasy {
+    @apply bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300;
   }
 
-  .link-hover:hover::after {
-    @apply w-full;
+  .card-fantasy {
+    @apply bg-white border border-gray-100 rounded-xl shadow-sm;
   }
 
   .glass-panel {
-    @apply backdrop-blur-lg bg-white/5 border border-white/10 rounded-xl shadow-xl;
+    @apply bg-white/80 backdrop-blur-sm border border-gray-100 rounded-xl shadow-lg;
   }
 }

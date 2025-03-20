@@ -1,7 +1,6 @@
-
 {
-  "variant": "modern",
-  "primary": "hsl(243, 75%, 59%)",
-  "appearance": "dark",
+  "variant": "professional",
+  "primary": "hsl(220, 85%, 57%)",
+  "appearance": "light",
   "radius": 1.0
 }
