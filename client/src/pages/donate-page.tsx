@@ -8,9 +8,8 @@ import { Loader2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { stripePromise } from "@/lib/stripe";
 
-function DonationForm() {
-  const [amount, setAmount] = useState<number>(5);
-  const [clientSecret, setClientSecret] = useState<string>("");
+// Composant pour le formulaire de paiement Stripe
+function PaymentForm({ clientSecret }: { clientSecret: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const stripe = useStripe();
@@ -19,7 +18,7 @@ function DonationForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!stripe || !elements || !clientSecret) return;
+    if (!stripe || !elements) return;
 
     setIsLoading(true);
 
@@ -40,6 +39,28 @@ function DonationForm() {
 
     setIsLoading(false);
   };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <PaymentElement />
+      <Button 
+        type="submit"
+        disabled={isLoading}
+        className="w-full btn-hover"
+      >
+        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Confirmer le don
+      </Button>
+    </form>
+  );
+}
+
+// Composant principal pour le processus de don
+function DonationForm() {
+  const [amount, setAmount] = useState<number>(5);
+  const [clientSecret, setClientSecret] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const initializePayment = async () => {
     try {
@@ -90,17 +111,7 @@ function DonationForm() {
 
   return (
     <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <PaymentElement />
-        <Button 
-          type="submit"
-          disabled={isLoading}
-          className="w-full btn-hover"
-        >
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Confirmer le don
-        </Button>
-      </form>
+      <PaymentForm clientSecret={clientSecret} />
     </Elements>
   );
 }
