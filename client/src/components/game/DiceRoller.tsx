@@ -6,7 +6,7 @@ import ReactConfetti from "react-confetti";
 
 const DICE_TYPES = [4, 6, 8, 10, 12, 20, 100];
 const ANIMATION_DURATION = 1000; // 1 seconde
-const FACES = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+const ANIMATION_STEPS = 15; // Nombre d'étapes dans l'animation
 
 export function DiceRoller() {
   const { rollDice } = useGame();
@@ -14,14 +14,12 @@ export function DiceRoller() {
   const [displayedResult, setDisplayedResult] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showDarkOverlay, setShowDarkOverlay] = useState(false);
-  const [showCube, setShowCube] = useState(false);
 
   const animateRoll = async (diceType: number) => {
     setIsRolling(true);
     setDisplayedResult(null);
-    setShowCube(true);
 
-    // Animation de défilement des nombres et rotation du cube
+    // Animation de défilement des nombres
     const startTime = Date.now();
     const animate = () => {
       const elapsedTime = Date.now() - startTime;
@@ -33,7 +31,6 @@ export function DiceRoller() {
         const result = Math.floor(Math.random() * diceType) + 1;
         setDisplayedResult(result);
         setIsRolling(false);
-        setShowCube(false);
 
         // Effets spéciaux pour d20
         if (diceType === 20) {
@@ -59,25 +56,11 @@ export function DiceRoller() {
       )}
       <div className="flex flex-col gap-4 p-4 border rounded-lg bg-slate-800/50 backdrop-blur-sm">
         <h3 className="text-lg gaming-header">Lancer de Dés</h3>
-
-        {showCube && (
-          <div className="scene">
-            <div className={`cube ${isRolling ? 'rolling' : ''}`}>
-              {FACES.map((face) => (
-                <div key={face} className={`face ${face}`}>
-                  {displayedResult || '?'}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {!showCube && displayedResult !== null && (
+        {displayedResult !== null && (
           <div className={`text-4xl font-bold text-center ${isRolling ? 'animate-bounce' : ''}`}>
             {displayedResult}
           </div>
         )}
-
         <div className="grid grid-cols-3 gap-2">
           {DICE_TYPES.map((type) => (
             <Button

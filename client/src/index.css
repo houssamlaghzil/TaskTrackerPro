@@ -13,77 +13,6 @@
 }
 
 @layer components {
-  /* Styles pour le dé 3D */
-  .scene {
-    @apply relative w-32 h-32 mx-auto;
-    perspective: 600px;
-  }
-
-  .cube {
-    @apply relative w-full h-full transition-transform duration-1000;
-    transform-style: preserve-3d;
-  }
-
-  .cube.rolling {
-    animation: rolling 1s ease-out;
-  }
-
-  .face {
-    @apply absolute w-full h-full flex items-center justify-center text-2xl font-bold bg-white/90 border-2 border-pastel-blue/50;
-    backface-visibility: hidden;
-  }
-
-  .face.front { transform: translateZ(50px); }
-  .face.back { transform: translateZ(-50px) rotateY(180deg); }
-  .face.right { transform: translateX(50px) rotateY(90deg); }
-  .face.left { transform: translateX(-50px) rotateY(-90deg); }
-  .face.top { transform: translateY(-50px) rotateX(90deg); }
-  .face.bottom { transform: translateY(50px) rotateX(-90deg); }
-
-  @keyframes rolling {
-    0% { transform: rotateX(0) rotateY(0); }
-    100% { transform: rotateX(720deg) rotateY(360deg); }
-  }
-
-  .card-hover {
-    @apply relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-sm border border-pastel-blue/30 rounded-xl shadow-sm max-w-full;
-  }
-
-  .card-hover:hover {
-    @apply transform scale-[1.02] shadow-lg border-pastel-purple/50;
-  }
-
-  .btn-hover {
-    @apply relative overflow-hidden transition-all duration-300 rounded-lg bg-white/90 hover:bg-pastel-blue/20;
-  }
-
-  .btn-hover:hover {
-    @apply transform scale-105 shadow-md;
-  }
-
-  .dice-button {
-    @apply relative overflow-hidden transition-all duration-300 bg-white/90 border border-pastel-blue/30 rounded-lg hover:shadow-md hover:border-pastel-purple/50;
-  }
-
-  /* Animation pour l'overlay sombre */
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  /* Autres classes utilitaires */
-  .transform-style-3d {
-    transform-style: preserve-3d;
-  }
-
   .card-hover {
     @apply relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-sm border border-pastel-blue/30 rounded-xl shadow-sm max-w-full;
   }
@@ -172,6 +101,19 @@
     @apply bg-white/80 backdrop-blur-sm border border-pastel-blue/30 rounded-xl shadow-lg max-w-full;
   }
 
+  /* Animation pour l'overlay sombre */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   /* Responsive container classes */
   .responsive-container {
