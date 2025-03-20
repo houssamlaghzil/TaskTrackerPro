@@ -34,6 +34,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(201).json(character);
   });
 
+  // Nouvelle route pour mettre à jour un personnage
+  app.patch("/api/characters/:id", async (req, res) => {
+    if (!req.user) return res.sendStatus(401);
+
+    const characterId = parseInt(req.params.id);
+    const validatedData = insertCharacterSchema.parse(req.body);
+
+    // Vérifier si le personnage existe et appartient à l'utilisateur
+    const character = await storage.getCharacter(characterId);
+    if (!character) return res.status(404).send("Character not found");
+
+    if (character.userId !== req.user.id && !req.user.isGameMaster) {
+      return res.status(403).send("Not authorized");
+    }
+
+    const updatedCharacter = await storage.updateCharacter(characterId, validatedData);
+    res.json(updatedCharacter);
+  });
+
   app.delete("/api/characters/:id", async (req, res) => {
     if (!req.user) return res.sendStatus(401);
     await storage.deleteCharacter(parseInt(req.params.id));

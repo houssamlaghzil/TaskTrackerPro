@@ -3,8 +3,8 @@ import connectPg from "connect-pg-simple";
 import session from "express-session";
 import { db } from "./db";
 import { users, characters, gameRooms, items } from "@shared/schema";
-import { eq, and } from "drizzle-orm";
-import type { User, InsertUser, Character, GameRoom, Item, InsertItem } from "@shared/schema";
+import { eq } from "drizzle-orm";
+import type { User, InsertUser, Character, GameRoom, Item, InsertCharacter } from "@shared/schema";
 
 const PostgresSessionStore = connectPg(session);
 
@@ -113,6 +113,23 @@ export class DatabaseStorage implements IStorage {
 
   async deleteItem(id: number): Promise<void> {
     await db.delete(items).where(eq(items.id, id));
+  }
+
+  async getCharacter(id: number): Promise<Character | undefined> {
+    const [character] = await db
+      .select()
+      .from(characters)
+      .where(eq(characters.id, id));
+    return character;
+  }
+
+  async updateCharacter(id: number, character: Partial<InsertCharacter>): Promise<Character> {
+    const [updatedCharacter] = await db
+      .update(characters)
+      .set(character)
+      .where(eq(characters.id, id))
+      .returning();
+    return updatedCharacter;
   }
 }
 
