@@ -89,17 +89,19 @@ function DonationForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <PaymentElement />
-      <Button 
-        type="submit"
-        disabled={isLoading}
-        className="w-full btn-hover"
-      >
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Confirmer le don
-      </Button>
-    </form>
+    <Elements stripe={stripePromise} options={{ clientSecret }}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <PaymentElement />
+        <Button 
+          type="submit"
+          disabled={isLoading}
+          className="w-full btn-hover"
+        >
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Confirmer le don
+        </Button>
+      </form>
+    </Elements>
   );
 }
 
@@ -113,9 +115,7 @@ export default function DonatePage() {
         <p className="text-muted-foreground mb-6 text-center">
           Soutenez notre communauté D&D en faisant un don. Chaque contribution nous aide à améliorer l'expérience de jeu.
         </p>
-        <Elements stripe={stripePromise}>
-          <DonationForm />
-        </Elements>
+        <DonationForm />
       </Card>
     </div>
   );
