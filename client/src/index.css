@@ -101,6 +101,20 @@
     @apply bg-white/80 backdrop-blur-sm border border-pastel-blue/30 rounded-xl shadow-lg max-w-full;
   }
 
+  /* Animation pour l'overlay sombre */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   /* Responsive container classes */
   .responsive-container {
     @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
