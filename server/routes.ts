@@ -3,8 +3,15 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { insertCharacterSchema, insertGameRoomSchema, insertItemSchema } from "@shared/schema";
+import cors from "cors";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Enable CORS for all routes
+  app.use(cors({
+    origin: true,
+    credentials: true
+  }));
+
   setupAuth(app);
   const httpServer = createServer(app);
 

@@ -4,25 +4,25 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-pastel-blue/30;
   }
 
   body {
-    @apply font-sans antialiased text-foreground min-h-screen bg-white;
+    @apply font-sans text-foreground min-h-screen bg-gradient-to-br from-pastel-blue/20 via-white to-pastel-purple/20 overflow-x-hidden;
   }
 }
 
 @layer components {
   .card-hover {
-    @apply relative overflow-hidden transition-all duration-300 bg-white border border-gray-100 rounded-xl shadow-sm;
+    @apply relative overflow-hidden transition-all duration-300 bg-white/80 backdrop-blur-sm border border-pastel-blue/30 rounded-xl shadow-sm max-w-full;
   }
 
   .card-hover:hover {
-    @apply transform scale-[1.02] shadow-lg;
+    @apply transform scale-[1.02] shadow-lg border-pastel-purple/50;
   }
 
   .btn-hover {
-    @apply relative overflow-hidden transition-all duration-300 rounded-lg;
+    @apply relative overflow-hidden transition-all duration-300 rounded-lg bg-white/90 hover:bg-pastel-blue/20;
   }
 
   .btn-hover:hover {
@@ -30,39 +30,39 @@
   }
 
   .dice-button {
-    @apply relative overflow-hidden transition-all duration-300 bg-white border border-gray-200 rounded-lg hover:shadow-md;
+    @apply relative overflow-hidden transition-all duration-300 bg-white/90 border border-pastel-blue/30 rounded-lg hover:shadow-md hover:border-pastel-purple/50;
   }
 
   .character-stat {
-    @apply relative transition-all duration-300 bg-white border border-gray-100 rounded-lg p-4;
+    @apply relative transition-all duration-300 bg-white/80 border border-pastel-blue/30 rounded-lg p-4 max-w-full;
   }
 
   .character-stat:hover {
-    @apply scale-105 z-10 shadow-lg;
+    @apply scale-105 z-10 shadow-lg border-pastel-purple/50;
   }
 
   .hp-text {
-    @apply text-red-600 font-semibold;
+    @apply text-pastel-red font-semibold;
   }
 
   .mana-text {
-    @apply text-blue-600 font-semibold;
+    @apply text-pastel-blue font-semibold;
   }
 
   .stamina-text {
-    @apply text-green-600 font-semibold;
+    @apply text-pastel-green font-semibold;
   }
 
   .stat-value {
-    @apply font-bold text-lg text-gray-900;
+    @apply font-bold text-lg text-primary-600;
   }
 
   .inventory-item {
-    @apply transition-all duration-200 bg-white border border-gray-100 rounded-lg p-4;
+    @apply transition-all duration-200 bg-white/80 border border-pastel-blue/30 rounded-lg p-4 max-w-full;
   }
 
   .inventory-item:hover {
-    @apply -translate-y-1 shadow-md border-primary;
+    @apply -translate-y-1 shadow-md border-pastel-purple/50;
   }
 
   .page-transition {
@@ -70,34 +70,47 @@
   }
 
   .dialog-content {
-    @apply animate-in zoom-in-95 duration-300 bg-white rounded-xl shadow-lg border border-gray-100;
+    @apply animate-in zoom-in-95 duration-300 bg-white/95 rounded-xl shadow-lg border border-pastel-blue/30 max-w-[90vw] max-h-[90vh] overflow-auto;
   }
 
   .gaming-header {
-    @apply font-bold text-gray-900;
+    @apply font-bold text-primary-600;
   }
 
   .stat-block {
-    @apply bg-white border border-gray-100 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300;
+    @apply bg-white/80 border border-pastel-blue/30 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 max-w-full;
   }
 
   .table-row-hover {
-    @apply transition-all duration-200 bg-white hover:bg-gray-50;
+    @apply transition-all duration-200 bg-white/80 hover:bg-pastel-blue/20;
   }
 
   .link-hover {
-    @apply relative transition-all duration-200 text-primary hover:text-primary-500;
+    @apply relative transition-all duration-200 text-primary-500 hover:text-primary-600;
   }
 
   .input-fantasy {
-    @apply bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300;
+    @apply bg-white/80 border border-pastel-blue/30 rounded-lg focus:ring-2 focus:ring-pastel-purple/30 focus:border-pastel-purple/50 transition-all duration-300 max-w-full;
   }
 
   .card-fantasy {
-    @apply bg-white border border-gray-100 rounded-xl shadow-sm;
+    @apply bg-white/90 backdrop-blur-sm border border-pastel-blue/30 rounded-xl shadow-sm max-w-full overflow-hidden;
   }
 
   .glass-panel {
-    @apply bg-white/80 backdrop-blur-sm border border-gray-100 rounded-xl shadow-lg;
+    @apply bg-white/80 backdrop-blur-sm border border-pastel-blue/30 rounded-xl shadow-lg max-w-full;
+  }
+
+  /* Responsive container classes */
+  .responsive-container {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+
+  .responsive-flex {
+    @apply flex flex-col sm:flex-row items-center gap-4;
   }
 }

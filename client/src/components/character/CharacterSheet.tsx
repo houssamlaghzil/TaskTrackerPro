@@ -248,7 +248,7 @@ export function CharacterSheet({ character }: Props) {
               />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="responsive-grid">
               <FormField
                 control={form.control}
                 name="stats.strength"
@@ -317,7 +317,7 @@ export function CharacterSheet({ character }: Props) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="responsive-grid">
               <FormField
                 control={form.control}
                 name="hitPoints"
