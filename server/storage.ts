@@ -2,9 +2,9 @@ import { IStorage } from "./types";
 import connectPg from "connect-pg-simple";
 import session from "express-session";
 import { db } from "./db";
-import { users, characters, gameRooms, items } from "@shared/schema";
-import { eq } from "drizzle-orm";
-import type { User, InsertUser, Character, GameRoom, Item, InsertCharacter } from "@shared/schema";
+import { users, characters, gameRooms, items, donations } from "@shared/schema";
+import { eq, desc } from "drizzle-orm";
+import type { User, InsertUser, Character, GameRoom, Item, InsertCharacter, Donation } from "@shared/schema";
 
 const PostgresSessionStore = connectPg(session);
 
@@ -137,6 +137,27 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(characters)
       .where(eq(characters.userId, userId));
+  }
+
+  async createDonation(donation: {
+    userId: number;
+    amount: number;
+    donorNickname: string;
+  }): Promise<Donation> {
+    const [newDonation] = await db
+      .insert(donations)
+      .values(donation)
+      .returning();
+    return newDonation;
+  }
+
+  async getTopDonation(): Promise<Donation | undefined> {
+    const [topDonation] = await db
+      .select()
+      .from(donations)
+      .orderBy(desc(donations.amount))
+      .limit(1);
+    return topDonation;
   }
 }
 

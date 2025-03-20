@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertCharacterSchema, insertGameRoomSchema, insertItemSchema } from "@shared/schema";
+import { insertCharacterSchema, insertGameRoomSchema, insertItemSchema, insertDonationSchema } from "@shared/schema";
 import cors from "cors";
 import Stripe from "stripe";
 
@@ -27,17 +27,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Stripe payment route
   app.post("/api/create-payment-intent", async (req, res) => {
     try {
-      const { amount } = req.body;
+      const { amount, donorNickname } = req.body;
+
+      if (!req.user) return res.sendStatus(401);
+
+      const validatedData = insertDonationSchema.parse({
+        amount: amount * 100,
+        donorNickname
+      });
 
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount * 100, // Convertir en centimes
+        amount: validatedData.amount,
         currency: "eur",
         payment_method_types: ["card"],
+        metadata: {
+          donorNickname: validatedData.donorNickname,
+          userId: req.user.id.toString()
+        }
+      });
+
+      await storage.createDonation({
+        userId: req.user.id,
+        amount: validatedData.amount,
+        donorNickname: validatedData.donorNickname
       });
 
       res.json({ clientSecret: paymentIntent.client_secret });
     } catch (error: any) {
       console.error("Stripe error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get top donation
+  app.get("/api/donations/top", async (req, res) => {
+    try {
+      const topDonation = await storage.getTopDonation();
+      res.json(topDonation);
+    } catch (error: any) {
+      console.error("Error fetching top donation:", error);
       res.status(500).json({ message: error.message });
     }
   });

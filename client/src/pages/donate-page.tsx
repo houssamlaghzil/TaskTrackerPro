@@ -8,9 +8,10 @@ import { Loader2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { stripePromise } from "@/lib/stripe";
 import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import type { Donation } from "@shared/schema";
 
-// Composant pour le formulaire de paiement Stripe
-function PaymentForm({ clientSecret }: { clientSecret: string }) {
+function PaymentForm({ clientSecret, donorNickname }: { clientSecret: string; donorNickname: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const stripe = useStripe();
@@ -36,6 +37,11 @@ function PaymentForm({ clientSecret }: { clientSecret: string }) {
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/donate/success`,
+          payment_method_data: {
+            metadata: {
+              donorNickname,
+            },
+          },
         },
       });
 
@@ -73,18 +79,28 @@ function PaymentForm({ clientSecret }: { clientSecret: string }) {
   );
 }
 
-// Composant principal pour le processus de don
 function DonationForm() {
   const [amount, setAmount] = useState<number>(5);
+  const [donorNickname, setDonorNickname] = useState("");
   const [clientSecret, setClientSecret] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const initializePayment = async () => {
+    if (!donorNickname.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez entrer un pseudonyme",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await apiRequest("POST", "/api/create-payment-intent", {
-        amount: amount
+        amount,
+        donorNickname: donorNickname.trim(),
       });
       const data = await response.json();
       setClientSecret(data.clientSecret);
@@ -100,43 +116,59 @@ function DonationForm() {
     }
   };
 
-  if (!clientSecret) {
+  if (clientSecret) {
     return (
-      <div className="space-y-4">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="amount" className="text-sm font-medium">
-            Montant du don (€)
-          </label>
-          <Input
-            id="amount"
-            type="number"
-            min="1"
-            value={amount}
-            onChange={(e) => setAmount(Math.max(1, Number(e.target.value)))}
-            className="input-fantasy"
-          />
-        </div>
-        <Button 
-          onClick={initializePayment}
-          disabled={isLoading}
-          className="w-full btn-hover"
-        >
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Faire un don de {amount}€
-        </Button>
-      </div>
+      <Elements stripe={stripePromise} options={{ clientSecret }}>
+        <PaymentForm clientSecret={clientSecret} donorNickname={donorNickname} />
+      </Elements>
     );
   }
 
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <PaymentForm clientSecret={clientSecret} />
-    </Elements>
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <label htmlFor="nickname" className="text-sm font-medium">
+          Votre pseudonyme
+        </label>
+        <Input
+          id="nickname"
+          value={donorNickname}
+          onChange={(e) => setDonorNickname(e.target.value)}
+          placeholder="Entrez votre pseudonyme"
+          className="input-fantasy"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="amount" className="text-sm font-medium">
+          Montant du don (€)
+        </label>
+        <Input
+          id="amount"
+          type="number"
+          min="1"
+          value={amount}
+          onChange={(e) => setAmount(Math.max(1, Number(e.target.value)))}
+          className="input-fantasy"
+        />
+      </div>
+      <Button 
+        onClick={initializePayment}
+        disabled={isLoading}
+        className="w-full btn-hover"
+      >
+        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Faire un don de {amount}€
+      </Button>
+    </div>
   );
 }
 
 export default function DonatePage() {
   const [location] = useLocation();
+
+  const { data: topDonation } = useQuery<Donation>({
+    queryKey: ["/api/donations/top"],
+  });
 
   // Vérifier si nous sommes sur la page de succès
   if (location === '/donate/success') {
@@ -164,11 +196,25 @@ export default function DonatePage() {
     <div className="container mx-auto max-w-md p-4">
       <Card className="p-6 card-fantasy">
         <h1 className="text-2xl font-bold mb-6 gaming-header text-center">
-          Faire un don
+          Soutenir notre communauté
         </h1>
-        <p className="text-muted-foreground mb-6 text-center">
-          Soutenez notre communauté D&D en faisant un don. Chaque contribution nous aide à améliorer l'expérience de jeu.
-        </p>
+        <div className="prose prose-sm dark:prose-invert mb-8">
+          <p>
+            Notre service est et restera toujours entièrement gratuit. Les dons sont facultatifs
+            et ne donnent aucun avantage particulier. Ils nous permettent simplement de continuer
+            à améliorer et maintenir la plateforme pour toute la communauté.
+          </p>
+          <p>
+            Important : Les dons doivent être effectués uniquement par la personne qui paye,
+            et seulement si elle en a les moyens. Nous n'encourageons en aucun cas les dons
+            au-delà de vos capacités financières.
+          </p>
+          {topDonation && (
+            <p className="text-center font-medium">
+              Plus gros don : {topDonation.donorNickname} ({topDonation.amount / 100}€)
+            </p>
+          )}
+        </div>
         <DonationForm />
       </Card>
     </div>
