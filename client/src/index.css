@@ -113,4 +113,53 @@
   .responsive-flex {
     @apply flex flex-col sm:flex-row items-center gap-4;
   }
+
+  /* Effets pour les lancers critiques */
+  .critical-failure {
+    position: relative;
+    animation: darken 0.5s forwards;
+  }
+
+  .lightning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background: 
+      linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0) 50%, 
+        rgba(255, 255, 255, 0.1) 50.2%, 
+        rgba(255, 255, 255, 0) 50.4%
+      );
+    animation: lightning 1.5s infinite;
+  }
+
+  .skull {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6rem;
+    opacity: 0;
+    animation: skullAppear 2s forwards;
+  }
+
+  @keyframes darken {
+    from { background-color: rgba(0, 0, 0, 0); }
+    to { background-color: rgba(0, 0, 0, 0.7); }
+  }
+
+  @keyframes lightning {
+    0% { opacity: 0; transform: translateY(-100%); }
+    5%, 25% { opacity: 1; transform: translateY(0); }
+    30%, 100% { opacity: 0; transform: translateY(100%); }
+  }
+
+  @keyframes skullAppear {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
 }

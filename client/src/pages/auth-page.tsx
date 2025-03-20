@@ -49,8 +49,8 @@ export default function AuthPage() {
         <Card className="p-6">
           <Tabs defaultValue="login">
             <TabsList className="grid grid-cols-2 w-full">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="register">Register</TabsTrigger>
+              <TabsTrigger value="login">Connexion</TabsTrigger>
+              <TabsTrigger value="register">Inscription</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
@@ -66,7 +66,7 @@ export default function AuthPage() {
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>Nom d'utilisateur</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -79,7 +79,7 @@ export default function AuthPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>Mot de passe</FormLabel>
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
@@ -92,7 +92,7 @@ export default function AuthPage() {
                     className="w-full"
                     disabled={loginMutation.isPending}
                   >
-                    Login
+                    Se connecter
                   </Button>
                 </form>
               </Form>
@@ -111,7 +111,7 @@ export default function AuthPage() {
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>Nom d'utilisateur</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -124,7 +124,7 @@ export default function AuthPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>Mot de passe</FormLabel>
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
@@ -137,7 +137,7 @@ export default function AuthPage() {
                     className="w-full"
                     disabled={registerMutation.isPending}
                   >
-                    Register
+                    S'inscrire
                   </Button>
                 </form>
               </Form>
@@ -146,11 +146,11 @@ export default function AuthPage() {
         </Card>
 
         <div className="hidden md:flex flex-col justify-center">
-          <h1 className="text-4xl font-bold mb-4">D&D Game Manager</h1>
+          <h1 className="text-4xl font-bold mb-4">Gestionnaire de Jeu D&D</h1>
           <p className="text-muted-foreground">
-            Welcome to the ultimate D&D game management platform. Join or create
-            games, manage your characters, and roll dice in real-time with other
-            players.
+            Bienvenue sur la plateforme ultime de gestion de parties D&D. Rejoignez ou créez
+            des parties, gérez vos personnages et lancez les dés en temps réel avec
+            d'autres joueurs.
           </p>
         </div>
       </div>
