@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { stripePromise } from "@/lib/stripe";
+import { useLocation } from "wouter";
 
 // Composant pour le formulaire de paiement Stripe
 function PaymentForm({ clientSecret }: { clientSecret: string }) {
@@ -14,30 +15,47 @@ function PaymentForm({ clientSecret }: { clientSecret: string }) {
   const { toast } = useToast();
   const stripe = useStripe();
   const elements = useElements();
+  const [, setLocation] = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!stripe || !elements) return;
-
-    setIsLoading(true);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: window.location.origin,
-      },
-    });
-
-    if (error) {
+    if (!stripe || !elements) {
       toast({
-        title: "Erreur de paiement",
-        description: error.message,
+        title: "Erreur",
+        description: "Le système de paiement n'est pas initialisé",
         variant: "destructive",
       });
+      return;
     }
 
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/donate/success`,
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Erreur de paiement",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors du paiement",
+        variant: "destructive",
+      });
+      console.error("Payment error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -70,12 +88,13 @@ function DonationForm() {
       });
       const data = await response.json();
       setClientSecret(data.clientSecret);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Erreur",
         description: "Impossible d'initialiser le paiement",
         variant: "destructive",
       });
+      console.error("Initialize payment error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -117,6 +136,30 @@ function DonationForm() {
 }
 
 export default function DonatePage() {
+  const [location] = useLocation();
+
+  // Vérifier si nous sommes sur la page de succès
+  if (location === '/donate/success') {
+    return (
+      <div className="container mx-auto max-w-md p-4">
+        <Card className="p-6 card-fantasy">
+          <h1 className="text-2xl font-bold mb-6 gaming-header text-center">
+            Merci pour votre don !
+          </h1>
+          <p className="text-muted-foreground mb-6 text-center">
+            Votre soutien est très apprécié et nous aide à améliorer l'expérience de jeu pour toute la communauté.
+          </p>
+          <Button 
+            onClick={() => window.location.href = '/'}
+            className="w-full btn-hover"
+          >
+            Retourner à l'accueil
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto max-w-md p-4">
       <Card className="p-6 card-fantasy">
