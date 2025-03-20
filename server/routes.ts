@@ -4,6 +4,15 @@ import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { insertCharacterSchema, insertGameRoomSchema, insertItemSchema } from "@shared/schema";
 import cors from "cors";
+import Stripe from "stripe";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2023-10-16"
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Enable CORS for all routes
@@ -14,6 +23,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   setupAuth(app);
   const httpServer = createServer(app);
+
+  // Stripe payment route
+  app.post("/api/create-payment-intent", async (req, res) => {
+    try {
+      const { amount } = req.body;
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount * 100, // Convertir en centimes
+        currency: "eur",
+        payment_method_types: ["card"],
+      });
+
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error: any) {
+      console.error("Stripe error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
 
   // Character routes
   app.post("/api/rooms/:roomId/characters", async (req, res) => {
