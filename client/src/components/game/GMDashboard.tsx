@@ -21,6 +21,8 @@ import {
 import { CharacterSheet } from "../character/CharacterSheet";
 import { useState } from "react";
 import { Link } from "wouter";
+import { translateClass } from "@/lib/translations";
+import type { Character } from "@shared/schema";
 
 export function GMDashboard({ roomId }: { roomId: number }) {
   const { characters } = useGame();
@@ -70,7 +72,7 @@ export function GMDashboard({ roomId }: { roomId: number }) {
                       {character.name}
                     </Link>
                   </TableCell>
-                  <TableCell>{character.class}</TableCell>
+                  <TableCell>{translateClass(character.class)}</TableCell>
                   <TableCell>{character.level}</TableCell>
                   <TableCell className="hp-text">
                     {character.hitPoints}/{character.maxHitPoints}
@@ -82,13 +84,7 @@ export function GMDashboard({ roomId }: { roomId: number }) {
                           variant="ghost"
                           size="sm"
                           className="btn-hover"
-                          onClick={() => {
-                            try {
-                              setSelectedCharacter(character);
-                            } catch (error) {
-                              console.error("Error setting selected character:", error);
-                            }
-                          }}
+                          onClick={() => setSelectedCharacter(character)}
                         >
                           <Edit className="w-4 h-4 mr-2" />
                           Modifier
