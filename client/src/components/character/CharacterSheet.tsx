@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import {
   Form,
@@ -5,6 +6,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,16 +23,14 @@ import { Character, insertCharacterSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { useGame } from "@/hooks/use-game";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Trash2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import { Inventory } from "./Inventory";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { motion, useAnimation, AnimatePresence } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useRef } from "react";
-import { Loader2 } from "lucide-react";
 
 const CLASSES = [
   "Barbarian",
@@ -73,41 +73,34 @@ function StatBlock({ label, value, onChange }: StatBlockProps) {
       <Input
         type="number"
         value={value}
-        onChange={(e) => onChange(parseInt(e.target.value) || 0)}
-        className="w-16 text-center mb-2 bg-slate-700/50 input-fantasy"
+        onChange={(e) => {
+          try {
+            const newValue = parseInt(e.target.value) || 0;
+            if (newValue >= 1 && newValue <= 20) {
+              onChange(newValue);
+            }
+          } catch (error) {
+            console.error("Error updating stat:", error);
+          }
+        }}
+        className="w-16 text-center mb-2 input-fantasy"
         min={1}
         max={20}
       />
-      <span className={`text-sm ${modifier >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+      <span className={`text-sm ${modifier >= 0 ? 'text-pastel-green' : 'text-pastel-red'}`}>
         {modifier >= 0 ? `+${modifier}` : modifier}
       </span>
     </div>
   );
 }
 
-type Props = {
-  character?: Character;
-};
-
-export function CharacterSheet({ character }: Props) {
+export function CharacterSheet({ character }: { character?: Character }) {
   const { createCharacter } = useGame();
   const { toast } = useToast();
   const controls = useAnimation();
   const [ref, inView] = useInView();
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const deleteCharacterMutation = useMutation({
-    mutationFn: async (characterId: number) => {
-      await apiRequest("DELETE", `/api/characters/${characterId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/rooms"] });
-      toast({
-        title: "Character deleted",
-        description: "Your character has been deleted successfully",
-      });
-    },
-  });
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
     resolver: zodResolver(insertCharacterSchema),
@@ -140,11 +133,79 @@ export function CharacterSheet({ character }: Props) {
     },
   });
 
-  const onSubmit = (data: any) => {
-    createCharacter(data);
+  const deleteCharacterMutation = useMutation({
+    mutationFn: async (characterId: number) => {
+      try {
+        await apiRequest("DELETE", `/api/characters/${characterId}`);
+      } catch (error) {
+        throw new Error("Erreur lors de la suppression du personnage");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/rooms"] });
+      toast({
+        title: "Personnage supprimé",
+        description: "Le personnage a été supprimé avec succès",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateCharacterMutation = useMutation({
+    mutationFn: async (data: any) => {
+      try {
+        const validatedData = insertCharacterSchema.parse(data);
+        const res = await apiRequest(
+          "PATCH",
+          `/api/characters/${character?.id}`,
+          validatedData
+        );
+        return res.json();
+      } catch (error: any) {
+        throw new Error(error.message || "Erreur lors de la mise à jour du personnage");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["/api/rooms", character?.roomId, "characters"],
+      });
+      toast({
+        title: "Succès",
+        description: "Les modifications ont été enregistrées",
+      });
+      setError(null);
+    },
+    onError: (error) => {
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive",
+      });
+      setError(error.message);
+    },
+  });
+
+  const onSubmit = async (data: any) => {
+    try {
+      const validatedData = insertCharacterSchema.parse(data);
+      await createCharacter(validatedData);
+      setError(null);
+    } catch (error: any) {
+      setError(error.message);
+      toast({
+        title: "Erreur",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
-  // Animation au scroll
   useEffect(() => {
     if (inView) {
       controls.start({
@@ -155,22 +216,25 @@ export function CharacterSheet({ character }: Props) {
     }
   }, [controls, inView]);
 
-  // Animation interactive avec la souris
   useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const { left, top, width, height } = card.getBoundingClientRect();
-      const x = (e.clientX - left) / width - 0.5;
-      const y = (e.clientY - top) / height - 0.5;
+      try {
+        const { left, top, width, height } = card.getBoundingClientRect();
+        const x = (e.clientX - left) / width - 0.5;
+        const y = (e.clientY - top) / height - 0.5;
 
-      card.style.transform = `
-        perspective(1000px)
-        rotateY(${x * 10}deg)
-        rotateX(${-y * 10}deg)
-        translateZ(10px)
-      `;
+        card.style.transform = `
+          perspective(1000px)
+          rotateY(${x * 10}deg)
+          rotateX(${-y * 10}deg)
+          translateZ(10px)
+        `;
+      } catch (error) {
+        console.error("Error in mouse move animation:", error);
+      }
     };
 
     const handleMouseLeave = () => {
@@ -186,27 +250,6 @@ export function CharacterSheet({ character }: Props) {
     };
   }, []);
 
-  // Mutation pour mettre à jour le personnage
-  const updateCharacterMutation = useMutation({
-    mutationFn: async (data: typeof form.getValues) => {
-      const res = await apiRequest(
-        "PATCH",
-        `/api/characters/${character?.id}`,
-        data
-      );
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["/api/rooms", character?.roomId, "characters"],
-      });
-      toast({
-        title: "Personnage sauvegardé",
-        description: "Les modifications ont été enregistrées avec succès",
-      });
-    },
-  });
-
   return (
     <motion.div
       ref={ref}
@@ -215,6 +258,12 @@ export function CharacterSheet({ character }: Props) {
       className="card-fantasy"
     >
       <Card ref={cardRef} className="p-6 card-fantasy transition-transform duration-300">
+        {error && (
+          <div className="mb-4 p-4 bg-pastel-red/20 border border-pastel-red rounded-lg text-red-600">
+            {error}
+          </div>
+        )}
+
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold gaming-header">Fiche de Personnage</h2>
           {character && (
@@ -239,10 +288,11 @@ export function CharacterSheet({ character }: Props) {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Character Name</FormLabel>
+                      <FormLabel>Nom du Personnage</FormLabel>
                       <FormControl>
                         <Input {...field} className="input-fantasy" />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -252,19 +302,27 @@ export function CharacterSheet({ character }: Props) {
                   name="level"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Level</FormLabel>
+                      <FormLabel>Niveau</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
                           {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value) || 1)
-                          }
+                          onChange={(e) => {
+                            try {
+                              const value = parseInt(e.target.value) || 1;
+                              if (value >= 1 && value <= 20) {
+                                field.onChange(value);
+                              }
+                            } catch (error) {
+                              console.error("Error updating level:", error);
+                            }
+                          }}
                           min={1}
                           max={20}
                           className="input-fantasy"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -276,12 +334,23 @@ export function CharacterSheet({ character }: Props) {
                     <FormItem>
                       <FormLabel>Race</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          try {
+                            field.onChange(value);
+                          } catch (error) {
+                            console.error("Error updating race:", error);
+                            toast({
+                              title: "Erreur",
+                              description: "Impossible de sélectionner cette race",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a race" />
+                          <SelectTrigger className="input-fantasy">
+                            <SelectValue placeholder="Sélectionner une race" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -292,6 +361,7 @@ export function CharacterSheet({ character }: Props) {
                           ))}
                         </SelectContent>
                       </Select>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -301,14 +371,25 @@ export function CharacterSheet({ character }: Props) {
                   name="class"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Class</FormLabel>
+                      <FormLabel>Classe</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          try {
+                            field.onChange(value);
+                          } catch (error) {
+                            console.error("Error updating class:", error);
+                            toast({
+                              title: "Erreur",
+                              description: "Impossible de sélectionner cette classe",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a class" />
+                          <SelectTrigger className="input-fantasy">
+                            <SelectValue placeholder="Sélectionner une classe" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -319,6 +400,7 @@ export function CharacterSheet({ character }: Props) {
                           ))}
                         </SelectContent>
                       </Select>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -410,6 +492,7 @@ export function CharacterSheet({ character }: Props) {
                           className="input-fantasy"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -430,6 +513,7 @@ export function CharacterSheet({ character }: Props) {
                           className="input-fantasy"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -449,6 +533,7 @@ export function CharacterSheet({ character }: Props) {
                           className="input-fantasy"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -469,6 +554,7 @@ export function CharacterSheet({ character }: Props) {
                           className="input-fantasy"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -489,6 +575,7 @@ export function CharacterSheet({ character }: Props) {
                           className="input-fantasy"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -509,6 +596,7 @@ export function CharacterSheet({ character }: Props) {
                           className="input-fantasy"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -526,6 +614,7 @@ export function CharacterSheet({ character }: Props) {
                         <FormControl>
                           <Input {...field} className="input-fantasy" />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -539,6 +628,7 @@ export function CharacterSheet({ character }: Props) {
                         <FormControl>
                           <Textarea {...field} className="input-fantasy" />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -552,6 +642,7 @@ export function CharacterSheet({ character }: Props) {
                         <FormControl>
                           <Input {...field} className="input-fantasy" />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -565,6 +656,7 @@ export function CharacterSheet({ character }: Props) {
                         <FormControl>
                           <Input {...field} className="input-fantasy" />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -581,6 +673,7 @@ export function CharacterSheet({ character }: Props) {
                           />
                           <FormLabel>Disponible</FormLabel>
                         </div>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -604,15 +697,20 @@ export function CharacterSheet({ character }: Props) {
           <div className="flex justify-end gap-4 mt-4">
             <Button
               variant="outline"
-              onClick={() => form.reset()}
+              onClick={() => {
+                try {
+                  form.reset();
+                  setError(null);
+                } catch (error) {
+                  console.error("Error resetting form:", error);
+                }
+              }}
               className="btn-hover"
             >
               Annuler
             </Button>
             <Button
-              onClick={form.handleSubmit((data) =>
-                updateCharacterMutation.mutate(data)
-              )}
+              onClick={form.handleSubmit((data) => updateCharacterMutation.mutate(data))}
               className="btn-hover"
               disabled={updateCharacterMutation.isPending}
             >
