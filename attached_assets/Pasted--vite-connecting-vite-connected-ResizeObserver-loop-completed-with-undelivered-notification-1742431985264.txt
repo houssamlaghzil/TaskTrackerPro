@@ -1,0 +1,45 @@
+[vite] connecting...
+[vite] connected.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+ResizeObserver loop completed with undelivered notifications.
+at https://a6427a88-ee99-40de-a5d1-67bbc7689b67-00-19wicdfr1bnvg.picard.replit.dev/:0:0
+ResizeObserver loop completed with undelivered notifications.
+Tableau de Bord du Maître du Jeu
+Créer un Personnage
+Personnage	Classe	Niveau	PV	Actions
+hlaghzil	Fighter	3	10/10	Modifier
+Partie de houssam
+Lancer de Dés
+d4
+d6
+d8
+d10
+d12
+d20
+d100
+[plugin:runtime-error-plugin] (unknown runtime error)
+    at sendError (https://a6427a88-ee99-40de-a5d1-67bbc7689b67-00-19wicdfr1bnvg.picard.replit.dev/:56:13)
+    at https://a6427a88-ee99-40de-a5d1-67bbc7689b67-00-19wicdfr1bnvg.picard.replit.dev/:66:3
+Click outside, press Esc key, or fix the code to dismiss.
+You can also disable this overlay by setting server.hmr.overlay to false in vite.config.js.
