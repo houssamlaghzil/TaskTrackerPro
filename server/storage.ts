@@ -131,6 +131,13 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return updatedCharacter;
   }
+
+  async getCharactersByUserId(userId: number): Promise<Character[]> {
+    return await db
+      .select()
+      .from(characters)
+      .where(eq(characters.userId, userId));
+  }
 }
 
 export const storage = new DatabaseStorage();
