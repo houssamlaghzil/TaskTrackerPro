@@ -1,0 +1,51 @@
+Page de Login :
+
+Interface minimaliste avec arrière-plan interactif subtil (paysage fantastique avec un léger effet de profondeur en parallaxe).
+
+Champs centrés avec bordures arrondies et douces, mettant en évidence chaque élément au focus avec une légère élévation et ombre portée.
+
+Bouton de connexion animé, passant à une couleur vive ou un léger zoom au survol.
+
+Palette lumineuse et cohérente avec nuances claires (blanc, gris pâle, bleu ciel ou violet doux), sans dégradés agressifs.
+
+Page d'accueil (liste des Rooms) :
+
+Disposition en grille fluide avec des cartes aux bords arrondis et légères ombres pour une profondeur subtile.
+
+Chaque carte présente clairement le nom de la room, statut (en cours, disponible), et une icône dynamique indiquant le nombre de joueurs.
+
+Animations douces à l'apparition des cartes (fade-in et léger déplacement vertical).
+
+Bouton « Créer une nouvelle room » avec icône interactive (lumière pulsante discrète pour attirer l'attention).
+
+Page Room (Personnages et Dés) :
+
+Liste des personnages sous forme de cartes modernes avec avatars personnalisés et bords lumineux au survol.
+
+Interface de dés intuitive avec icônes modernes, accompagnées d'animations fluides (rotation et rebondissement léger lors du clic).
+
+Affichage des résultats clair, instantané, avec une zone d'historique rétractable, facilement accessible.
+
+Interface complète d'une Fiche de Personnage :
+
+Apparition de la fiche avec une animation élégante d'ouverture (effet "slide" et "fade-in").
+
+Design en cartes individuelles pour chaque attribut (Force, Dextérité, etc.) avec fonds très clairs et textes lisibles.
+
+Icônes distinctes, modernes et épurées pour chaque attribut, compétence ou ressource (mana, endurance).
+
+Jauges interactives pour mana et endurance, avec animation fluide lorsqu'elles évoluent.
+
+Bouton d’attaque ultime clairement identifiable, doté d'une légère animation pour signaler son état disponible ou non.
+
+Fermeture de la fiche avec une animation inversée élégante (effet "slide-out" et "fade-out").
+
+Ambiance générale :
+
+Style minimaliste, moderne et clair, sans utilisation de dégradés lourds.
+
+Couleurs logiques et coordonnées : tons doux dominants (blanc cassé, gris clair, bleu pastel), accentués par des couleurs vives pour éléments interactifs importants.
+
+Utilisation judicieuse d'ombres légères pour créer une impression subtile de profondeur.
+
+Animations fluides et réactives, renforçant le sentiment d'interaction et de dynamisme.

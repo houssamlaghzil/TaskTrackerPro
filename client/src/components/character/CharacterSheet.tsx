@@ -70,7 +70,7 @@ function StatBlock({ label, value, onChange }: StatBlockProps) {
         type="number"
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value) || 0)}
-        className="w-16 text-center mb-2 bg-slate-700/50"
+        className="w-16 text-center mb-2 bg-slate-700/50 input-fantasy"
         min={1}
         max={20}
       />
@@ -138,7 +138,7 @@ export function CharacterSheet({ character }: Props) {
   };
 
   return (
-    <Card className="p-6">
+    <Card className="p-6 card-fantasy">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold gaming-header">Fiche de Personnage</h2>
         {character && (
@@ -146,9 +146,10 @@ export function CharacterSheet({ character }: Props) {
             variant="destructive"
             size="sm"
             onClick={() => deleteCharacterMutation.mutate(character.id)}
+            className="btn-hover"
           >
             <Trash2 className="w-4 h-4 mr-2" />
-            Delete Character
+            Supprimer
           </Button>
         )}
       </div>
@@ -164,7 +165,7 @@ export function CharacterSheet({ character }: Props) {
                   <FormItem>
                     <FormLabel>Character Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} className="input-fantasy" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -185,6 +186,7 @@ export function CharacterSheet({ character }: Props) {
                         }
                         min={1}
                         max={20}
+                        className="input-fantasy"
                       />
                     </FormControl>
                   </FormItem>
@@ -329,7 +331,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
-                        className="bg-slate-700/50"
+                        className="input-fantasy"
                       />
                     </FormControl>
                   </FormItem>
@@ -349,7 +351,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
-                        className="bg-slate-700/50"
+                        className="input-fantasy"
                       />
                     </FormControl>
                   </FormItem>
@@ -368,7 +370,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
-                        className="bg-slate-700/50"
+                        className="input-fantasy"
                       />
                     </FormControl>
                   </FormItem>
@@ -388,7 +390,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
-                        className="bg-slate-700/50"
+                        className="input-fantasy"
                       />
                     </FormControl>
                   </FormItem>
@@ -408,7 +410,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
-                        className="bg-slate-700/50"
+                        className="input-fantasy"
                       />
                     </FormControl>
                   </FormItem>
@@ -428,7 +430,7 @@ export function CharacterSheet({ character }: Props) {
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
-                        className="bg-slate-700/50"
+                        className="input-fantasy"
                       />
                     </FormControl>
                   </FormItem>
@@ -436,7 +438,7 @@ export function CharacterSheet({ character }: Props) {
               />
             </div>
 
-            <Card className="p-4 bg-slate-800/50 backdrop-blur-sm">
+            <Card className="p-4 card-fantasy">
               <h3 className="text-lg font-bold mb-4 gaming-header">Attaque Ultime</h3>
               <div className="space-y-4">
                 <FormField
@@ -446,7 +448,7 @@ export function CharacterSheet({ character }: Props) {
                     <FormItem>
                       <FormLabel>Nom de l'Attaque</FormLabel>
                       <FormControl>
-                        <Input {...field} className="bg-slate-700/50" />
+                        <Input {...field} className="input-fantasy" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -459,7 +461,7 @@ export function CharacterSheet({ character }: Props) {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea {...field} className="bg-slate-700/50" />
+                        <Textarea {...field} className="input-fantasy" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -472,7 +474,7 @@ export function CharacterSheet({ character }: Props) {
                     <FormItem>
                       <FormLabel>Dégâts</FormLabel>
                       <FormControl>
-                        <Input {...field} className="bg-slate-700/50" />
+                        <Input {...field} className="input-fantasy" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -485,7 +487,7 @@ export function CharacterSheet({ character }: Props) {
                     <FormItem>
                       <FormLabel>Temps de Recharge</FormLabel>
                       <FormControl>
-                        <Input {...field} className="bg-slate-700/50" />
+                        <Input {...field} className="input-fantasy" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -510,7 +512,7 @@ export function CharacterSheet({ character }: Props) {
             </Card>
 
             {!character && (
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full btn-hover">
                 Créer le Personnage
               </Button>
             )}

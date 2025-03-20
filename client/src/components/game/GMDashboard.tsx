@@ -27,7 +27,7 @@ export function GMDashboard({ roomId }: { roomId: number }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   return (
-    <Card className="p-4">
+    <Card className="p-4 card-fantasy">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold gaming-header">Tableau de Bord du Maître du Jeu</h2>
         <Dialog>
@@ -46,56 +46,58 @@ export function GMDashboard({ roomId }: { roomId: number }) {
         </Dialog>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Personnage</TableHead>
-            <TableHead>Classe</TableHead>
-            <TableHead>Niveau</TableHead>
-            <TableHead>PV</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {characters.map((character) => (
-            <TableRow key={character.id} className="table-row-hover">
-              <TableCell>
-                <Link href={`/rooms/${roomId}/characters/${character.id}`} className="link-hover text-primary">
-                  {character.name}
-                </Link>
-              </TableCell>
-              <TableCell>{character.class}</TableCell>
-              <TableCell>{character.level}</TableCell>
-              <TableCell>
-                {character.hitPoints}/{character.maxHitPoints}
-              </TableCell>
-              <TableCell>
-                <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="btn-hover"
-                      onClick={() => setSelectedCharacter(character)}
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Modifier
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl dialog-content">
-                    <DialogHeader>
-                      <DialogTitle>Modifier le Personnage</DialogTitle>
-                    </DialogHeader>
-                    {selectedCharacter && (
-                      <CharacterSheet character={selectedCharacter} />
-                    )}
-                  </DialogContent>
-                </Dialog>
-              </TableCell>
+      <div className="rounded-lg overflow-hidden border border-slate-700/50 backdrop-blur-sm">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-800/50">
+              <TableHead>Personnage</TableHead>
+              <TableHead>Classe</TableHead>
+              <TableHead>Niveau</TableHead>
+              <TableHead>PV</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {characters.map((character) => (
+              <TableRow key={character.id} className="table-row-hover">
+                <TableCell>
+                  <Link href={`/rooms/${roomId}/characters/${character.id}`} className="link-hover text-primary">
+                    {character.name}
+                  </Link>
+                </TableCell>
+                <TableCell>{character.class}</TableCell>
+                <TableCell>{character.level}</TableCell>
+                <TableCell>
+                  {character.hitPoints}/{character.maxHitPoints}
+                </TableCell>
+                <TableCell>
+                  <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="btn-hover"
+                        onClick={() => setSelectedCharacter(character)}
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Modifier
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl dialog-content">
+                      <DialogHeader>
+                        <DialogTitle>Modifier le Personnage</DialogTitle>
+                      </DialogHeader>
+                      {selectedCharacter && (
+                        <CharacterSheet character={selectedCharacter} />
+                      )}
+                    </DialogContent>
+                  </Dialog>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </Card>
   );
 }
