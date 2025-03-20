@@ -15,6 +15,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CharacterSheet } from "../character/CharacterSheet";
@@ -40,6 +41,9 @@ export function GMDashboard({ roomId }: { roomId: number }) {
           <DialogContent className="max-w-4xl dialog-content">
             <DialogHeader>
               <DialogTitle>Créer un Nouveau Personnage</DialogTitle>
+              <DialogDescription>
+                Remplissez le formulaire pour créer un nouveau personnage.
+              </DialogDescription>
             </DialogHeader>
             <CharacterSheet />
           </DialogContent>
@@ -78,7 +82,13 @@ export function GMDashboard({ roomId }: { roomId: number }) {
                           variant="ghost"
                           size="sm"
                           className="btn-hover"
-                          onClick={() => setSelectedCharacter(character)}
+                          onClick={() => {
+                            try {
+                              setSelectedCharacter(character);
+                            } catch (error) {
+                              console.error("Error setting selected character:", error);
+                            }
+                          }}
                         >
                           <Edit className="w-4 h-4 mr-2" />
                           Modifier
@@ -87,6 +97,9 @@ export function GMDashboard({ roomId }: { roomId: number }) {
                       <DialogContent className="max-w-4xl dialog-content">
                         <DialogHeader>
                           <DialogTitle>Modifier le Personnage</DialogTitle>
+                          <DialogDescription>
+                            Modifiez les informations du personnage.
+                          </DialogDescription>
                         </DialogHeader>
                         {selectedCharacter && (
                           <CharacterSheet character={selectedCharacter} />

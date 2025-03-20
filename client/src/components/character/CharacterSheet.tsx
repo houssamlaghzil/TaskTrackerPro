@@ -250,6 +250,46 @@ export function CharacterSheet({ character }: { character?: Character }) {
     };
   }, []);
 
+  // Ajout d'un useEffect pour gérer le ResizeObserver de manière plus sûre
+  useEffect(() => {
+    let resizeObserver: ResizeObserver | null = null;
+    const target = cardRef.current;
+
+    if (target) {
+      try {
+        resizeObserver = new ResizeObserver((entries) => {
+          // Utiliser requestAnimationFrame pour éviter les boucles infinies
+          requestAnimationFrame(() => {
+            if (!entries.length) return;
+
+            // Mettre à jour les animations ou le style si nécessaire
+            if (inView) {
+              controls.start({
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, ease: "easeOut" },
+              });
+            }
+          });
+        });
+
+        resizeObserver.observe(target);
+      } catch (error) {
+        console.error("Error setting up ResizeObserver:", error);
+      }
+    }
+
+    return () => {
+      if (resizeObserver) {
+        try {
+          resizeObserver.disconnect();
+        } catch (error) {
+          console.error("Error disconnecting ResizeObserver:", error);
+        }
+      }
+    };
+  }, [cardRef, controls, inView]);
+
   return (
     <motion.div
       ref={ref}
