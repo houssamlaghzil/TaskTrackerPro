@@ -29,8 +29,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
 
 const CLASSES = [
   "Barbarian",
@@ -74,13 +73,9 @@ function StatBlock({ label, value, onChange }: StatBlockProps) {
         type="number"
         value={value}
         onChange={(e) => {
-          try {
-            const newValue = parseInt(e.target.value) || 0;
-            if (newValue >= 1 && newValue <= 20) {
-              onChange(newValue);
-            }
-          } catch (error) {
-            console.error("Error updating stat:", error);
+          const newValue = parseInt(e.target.value) || 0;
+          if (newValue >= 1 && newValue <= 20) {
+            onChange(newValue);
           }
         }}
         className="w-16 text-center mb-2 input-fantasy"
@@ -97,10 +92,8 @@ function StatBlock({ label, value, onChange }: StatBlockProps) {
 export function CharacterSheet({ character }: { character?: Character }) {
   const { createCharacter } = useGame();
   const { toast } = useToast();
-  const controls = useAnimation();
-  const [ref, inView] = useInView();
-  const cardRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const form = useForm({
     resolver: zodResolver(insertCharacterSchema),
@@ -135,11 +128,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
 
   const deleteCharacterMutation = useMutation({
     mutationFn: async (characterId: number) => {
-      try {
-        await apiRequest("DELETE", `/api/characters/${characterId}`);
-      } catch (error) {
-        throw new Error("Erreur lors de la suppression du personnage");
-      }
+      const res = await apiRequest("DELETE", `/api/characters/${characterId}`);
+      if (!res.ok) throw new Error("Erreur lors de la suppression du personnage");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/rooms"] });
@@ -148,7 +138,7 @@ export function CharacterSheet({ character }: { character?: Character }) {
         description: "Le personnage a été supprimé avec succès",
       });
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast({
         title: "Erreur",
         description: error.message,
@@ -159,17 +149,17 @@ export function CharacterSheet({ character }: { character?: Character }) {
 
   const updateCharacterMutation = useMutation({
     mutationFn: async (data: any) => {
-      try {
-        const validatedData = insertCharacterSchema.parse(data);
-        const res = await apiRequest(
-          "PATCH",
-          `/api/characters/${character?.id}`,
-          validatedData
-        );
-        return res.json();
-      } catch (error: any) {
-        throw new Error(error.message || "Erreur lors de la mise à jour du personnage");
-      }
+      if (!character?.id) throw new Error("ID du personnage manquant");
+
+      const validatedData = insertCharacterSchema.parse(data);
+      const res = await apiRequest(
+        "PATCH",
+        `/api/characters/${character.id}`,
+        validatedData
+      );
+
+      if (!res.ok) throw new Error("Erreur lors de la mise à jour");
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -181,7 +171,7 @@ export function CharacterSheet({ character }: { character?: Character }) {
       });
       setError(null);
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast({
         title: "Erreur",
         description: error.message,
@@ -207,38 +197,28 @@ export function CharacterSheet({ character }: { character?: Character }) {
   };
 
   useEffect(() => {
-    if (inView) {
-      controls.start({
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5, ease: "easeOut" },
-      });
-    }
-  }, [controls, inView]);
-
-  useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      try {
-        const { left, top, width, height } = card.getBoundingClientRect();
-        const x = (e.clientX - left) / width - 0.5;
-        const y = (e.clientY - top) / height - 0.5;
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
 
+      requestAnimationFrame(() => {
         card.style.transform = `
           perspective(1000px)
-          rotateY(${x * 10}deg)
-          rotateX(${-y * 10}deg)
-          translateZ(10px)
+          rotateY(${x * 5}deg)
+          rotateX(${-y * 5}deg)
+          translateZ(5px)
         `;
-      } catch (error) {
-        console.error("Error in mouse move animation:", error);
-      }
+      });
     };
 
     const handleMouseLeave = () => {
-      card.style.transform = "none";
+      requestAnimationFrame(() => {
+        card.style.transform = 'none';
+      });
     };
 
     card.addEventListener("mousemove", handleMouseMove);
@@ -250,58 +230,18 @@ export function CharacterSheet({ character }: { character?: Character }) {
     };
   }, []);
 
-  // Fixing the ResizeObserver setup
-  useEffect(() => {
-    let resizeObserver: ResizeObserver | null = null;
-    const target = cardRef.current;
-
-    if (target) {
-      try {
-        resizeObserver = new ResizeObserver((entries) => {
-          if (!entries.length) return;
-
-          // Use RAF to avoid infinite loops
-          window.requestAnimationFrame(() => {
-            if (inView) {
-              controls.start({
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.5, ease: "easeOut" },
-              });
-            }
-          });
-        });
-
-        resizeObserver.observe(target);
-      } catch (error) {
-        console.error("Error setting up ResizeObserver:", error);
-      }
-    }
-
-    return () => {
-      if (resizeObserver) {
-        try {
-          resizeObserver.disconnect();
-        } catch (error) {
-          console.error("Error disconnecting ResizeObserver:", error);
-        }
-      }
-    };
-  }, [cardRef, controls, inView]);
-
-  // Fixing type mismatches in form fields
   const fixNumberInput = (value: number | null): number => {
     return value ?? 0;
   };
 
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={controls}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
       className="card-fantasy"
     >
-      <Card ref={cardRef} className="p-6 card-fantasy transition-transform duration-300">
+      <Card ref={cardRef} className="p-6 card-fantasy">
         {error && (
           <div className="mb-4 p-4 bg-pastel-red/20 border border-pastel-red rounded-lg text-red-600">
             {error}
@@ -325,7 +265,13 @@ export function CharacterSheet({ character }: { character?: Character }) {
 
         <ScrollArea className="h-[calc(100vh-200px)]">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              onSubmit={form.handleSubmit(character ? 
+                (data) => updateCharacterMutation.mutate(data) : 
+                onSubmit
+              )}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -738,25 +684,22 @@ export function CharacterSheet({ character }: { character?: Character }) {
             <Button
               variant="outline"
               onClick={() => {
-                try {
-                  form.reset();
-                  setError(null);
-                } catch (error) {
-                  console.error("Error resetting form:", error);
-                }
+                form.reset();
+                setError(null);
               }}
               className="btn-hover"
             >
               Annuler
             </Button>
             <Button
+              type="submit"
               onClick={form.handleSubmit((data) => updateCharacterMutation.mutate(data))}
               className="btn-hover"
               disabled={updateCharacterMutation.isPending}
             >
-              {updateCharacterMutation.isPending ? (
+              {updateCharacterMutation.isPending && (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : null}
+              )}
               Sauvegarder
             </Button>
           </div>
