@@ -6,7 +6,7 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  isGameMaster: boolean("is_game_master").default(false).notNull(),
+  isGameMaster: boolean("is_game_master").default(true).notNull(), // Changé de false à true
 });
 
 export const gameRooms = pgTable("game_rooms", {
