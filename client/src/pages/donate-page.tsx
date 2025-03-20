@@ -33,13 +33,14 @@ function PaymentForm({ clientSecret, donorNickname }: { clientSecret: string; do
     try {
       setIsLoading(true);
 
-      const { error } = await stripe.confirmPayment({
+      const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
+        redirect: "if_required",
         confirmParams: {
           return_url: `${window.location.origin}/donate/success`,
           payment_method_data: {
-            metadata: {
-              donorNickname,
+            billing_details: {
+              name: donorNickname,
             },
           },
         },
@@ -51,6 +52,13 @@ function PaymentForm({ clientSecret, donorNickname }: { clientSecret: string; do
           description: error.message,
           variant: "destructive",
         });
+      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+        toast({
+          title: "Paiement réussi",
+          description: "Merci pour votre don !",
+        });
+        // Utiliser setLocation au lieu de window.location
+        setLocation("/donate/success");
       }
     } catch (error: any) {
       toast({
@@ -165,6 +173,7 @@ function DonationForm() {
 
 export default function DonatePage() {
   const [location] = useLocation();
+  const [, setLocation] = useLocation();
 
   const { data: topDonation } = useQuery<Donation>({
     queryKey: ["/api/donations/top"],
@@ -182,7 +191,7 @@ export default function DonatePage() {
             Votre soutien est très apprécié et nous aide à améliorer l'expérience de jeu pour toute la communauté.
           </p>
           <Button 
-            onClick={() => window.location.href = '/'}
+            onClick={() => setLocation("/")}
             className="w-full btn-hover"
           >
             Retourner à l'accueil
