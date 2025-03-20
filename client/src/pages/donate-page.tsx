@@ -2,16 +2,11 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
-
-if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
-  throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
-}
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+import { stripePromise } from "@/lib/stripe";
 
 function DonationForm() {
   const [amount, setAmount] = useState<number>(5);
@@ -23,7 +18,7 @@ function DonationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!stripe || !elements || !clientSecret) return;
 
     setIsLoading(true);
