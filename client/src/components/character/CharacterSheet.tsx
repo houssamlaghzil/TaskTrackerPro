@@ -32,29 +32,29 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
 
 const CLASSES = [
-  "Barbarian",
-  "Bard",
-  "Cleric",
-  "Druid",
-  "Fighter",
-  "Monk",
-  "Paladin",
-  "Ranger",
-  "Rogue",
-  "Sorcerer",
-  "Warlock",
-  "Wizard",
+  { value: "Barbarian", label: "Barbare" },
+  { value: "Bard", label: "Barde" },
+  { value: "Cleric", label: "Clerc" },
+  { value: "Druid", label: "Druide" },
+  { value: "Fighter", label: "Guerrier" },
+  { value: "Monk", label: "Moine" },
+  { value: "Paladin", label: "Paladin" },
+  { value: "Ranger", label: "Rôdeur" },
+  { value: "Rogue", label: "Roublard" },
+  { value: "Sorcerer", label: "Ensorceleur" },
+  { value: "Warlock", label: "Occultiste" },
+  { value: "Wizard", label: "Magicien" },
 ];
 
 const RACES = [
-  "Human",
-  "Elf",
-  "Dwarf",
-  "Halfling",
-  "Gnome",
-  "Half-Elf",
-  "Half-Orc",
-  "Tiefling",
+  { value: "Human", label: "Humain" },
+  { value: "Elf", label: "Elfe" },
+  { value: "Dwarf", label: "Nain" },
+  { value: "Halfling", label: "Halfelin" },
+  { value: "Gnome", label: "Gnome" },
+  { value: "Half-Elf", label: "Demi-Elfe" },
+  { value: "Half-Orc", label: "Demi-Orc" },
+  { value: "Tiefling", label: "Tiefelin" },
 ];
 
 type StatBlockProps = {
@@ -266,8 +266,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
         <ScrollArea className="h-[calc(100vh-200px)]">
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(character ? 
-                (data) => updateCharacterMutation.mutate(data) : 
+              onSubmit={form.handleSubmit(character ?
+                (data) => updateCharacterMutation.mutate(data) :
                 onSubmit
               )}
               className="space-y-6"
@@ -324,18 +324,7 @@ export function CharacterSheet({ character }: { character?: Character }) {
                     <FormItem>
                       <FormLabel>Race</FormLabel>
                       <Select
-                        onValueChange={(value) => {
-                          try {
-                            field.onChange(value);
-                          } catch (error) {
-                            console.error("Error updating race:", error);
-                            toast({
-                              title: "Erreur",
-                              description: "Impossible de sélectionner cette race",
-                              variant: "destructive",
-                            });
-                          }
-                        }}
+                        onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
@@ -345,8 +334,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
                         </FormControl>
                         <SelectContent>
                           {RACES.map((race) => (
-                            <SelectItem key={race} value={race}>
-                              {race}
+                            <SelectItem key={race.value} value={race.value}>
+                              {race.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -363,18 +352,7 @@ export function CharacterSheet({ character }: { character?: Character }) {
                     <FormItem>
                       <FormLabel>Classe</FormLabel>
                       <Select
-                        onValueChange={(value) => {
-                          try {
-                            field.onChange(value);
-                          } catch (error) {
-                            console.error("Error updating class:", error);
-                            toast({
-                              title: "Erreur",
-                              description: "Impossible de sélectionner cette classe",
-                              variant: "destructive",
-                            });
-                          }
-                        }}
+                        onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
@@ -384,8 +362,8 @@ export function CharacterSheet({ character }: { character?: Character }) {
                         </FormControl>
                         <SelectContent>
                           {CLASSES.map((cls) => (
-                            <SelectItem key={cls} value={cls}>
-                              {cls}
+                            <SelectItem key={cls.value} value={cls.value}>
+                              {cls.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
